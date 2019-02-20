@@ -14,10 +14,12 @@ import AddTransactionButton from '../components/AddTransactionButton'
 export default class accouts extends Component {
 
   state = {
-    transactions: []
+    transactions: [],
+    name: ''
   }
 
   async componentDidMount(){
+    this.setState({name: this.props.navigation.getParam('name', 'Nome do Usuário')})
     try{
       const response = await api.get('transactions')
 
@@ -32,7 +34,7 @@ export default class accouts extends Component {
       <LinearGradient style={styles.container} colors={['#338FEB', '#0061BF']}>
         <StatusBar backgroundColor="#338FEB"/>
 
-        <Topbar topbar={{backButton: false, title: 'Nome do Usuário', settingsButton: false}}/>
+        <Topbar topbar={{backButton: false, title: this.state.name, settingsButton: false}}/>
 
         <View style={styles.swiperWrapper}>
           <Swiper dotColor={"#FFF"} activeDotColor={"#43C545"}>
