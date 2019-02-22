@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet, StatusBar, BackHandler, TouchableOpacity, TextInput, Picker, KeyboardAvoidingView } from 'react-native'
 
 import api from '../services/api'
-
-import LinearGradient from 'react-native-linear-gradient'
+import SInfo from "react-native-sensitive-info";
 
 import Topbar from '../components/Topbar'
 
@@ -13,12 +12,14 @@ export default class newTransaction extends Component {
     this.state = {
       transactionDescription: '',
       transactionValue: '',
-      transactionType: 'true'
+      transactionType: 'true',
+      user: ''
     }
   }
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    SInfo.getItem('userID', {}).then(userID => this.setState({user: userID}))
   }
 
   componentWillUnmount() {
@@ -39,7 +40,8 @@ export default class newTransaction extends Component {
       {
         "transactionDescription": this.state.transactionDescription,
         "transactionValue": this.state.transactionValue,
-        "transactionType": this.state.transactionType
+        "transactionType": this.state.transactionType,
+        "user": this.state.user
       }
     )
 
@@ -72,8 +74,8 @@ export default class newTransaction extends Component {
     const settingsButton = navigation.getParam('settingsButton', true)
 
     return (
-      <LinearGradient style={styles.container} colors={['#338FEB', '#0061BF']}>
-        <StatusBar backgroundColor="#338FEB"/>
+      <View style={styles.container}>
+        <StatusBar backgroundColor="#212121"/>
         <Topbar topbar={{backButton, title, settingsButton}} navigation={this.props.navigation}/>
 
         <View style={styles.content}>
@@ -97,7 +99,7 @@ export default class newTransaction extends Component {
             </TouchableOpacity>
           </View>
         </View>
-      </LinearGradient>
+      </View>
     )
   }
 }
@@ -105,6 +107,7 @@ export default class newTransaction extends Component {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
+        backgroundColor: '#212121'
     },
     content: {
       flex: 1,

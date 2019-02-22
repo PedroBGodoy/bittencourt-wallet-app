@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator } from 'react-native'
 
 import Auth0 from 'react-native-auth0';
-const auth0 = new Auth0({ domain: 'bittencourt.auth0.com', clientId: '4U4Qkc8IxtVEL1kc0MDu6LlCgTcmmhXi' });
 import DeviceInfo from "react-native-device-info";
 import SInfo from "react-native-sensitive-info";
 import RNRestart from "react-native-restart";
+
+const auth0 = new Auth0({ domain: 'bittencourt.auth0.com', clientId: '4U4Qkc8IxtVEL1kc0MDu6LlCgTcmmhXi' });
 
 export default class Login extends Component {
 
@@ -22,12 +23,11 @@ export default class Login extends Component {
           this.changeScene(data);
         })
         .catch(err => {
-          SInfo.getItem("refreshToken", {}).then(refreshToken => { // get the refresh token from the secure storage
-            // request for a new access token using the refresh token 
+          SInfo.getItem("refreshToken", {}).then(refreshToken => {
             auth0.auth
               .refreshToken({ refreshToken: refreshToken })
               .then(newAccessToken => {
-                SInfo.setItem("accessToken", newAccessToken);
+                SInfo.setItem("accessToken", newAccessToken, {});
                 RNRestart.Restart();
               })
               .catch(accessTokenErr => {
@@ -56,7 +56,7 @@ export default class Login extends Component {
         auth0.auth
         .userInfo({ token: res.accessToken })
         .then(data => {
-          this.changeScene(data); // go to the Account screen
+          this.changeScene(data);
         })
         .catch(err => {
           console.log("error occurred while trying to get user details: ", err);
@@ -71,19 +71,28 @@ export default class Login extends Component {
     this.setState({
       hasInitialized: true
     });
-    console.log(data)
-    this.props.navigation.navigate('Accounts', {name: data.name})
+    let userID = data.sub.split('|')[1]
+    SInfo.setItem('userID', userID, {})
+    this.props.navigation.navigate('Accounts', {name: data.name, userID: userID})
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity 
-          style={styles.loginButton}
-          onPress={this.handleLogin}
-        >
-          <Text style={styles.loginText}>Login</Text>
-        </TouchableOpacity>
+        <StatusBar backgroundColor="#212121"/>
+        <ActivityIndicator
+          size='large'
+          color='#05a5d1'
+          animating={!this.state.hasInitialized}
+        />
+        {this.state.hasInitialized && (
+          <TouchableOpacity 
+            style={styles.loginButton}
+            onPress={this.handleLogin}
+          >
+            <Text style={styles.loginText}>Login</Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   }
@@ -94,7 +103,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#212121'
   },
   loginButton: {
     height: 50,

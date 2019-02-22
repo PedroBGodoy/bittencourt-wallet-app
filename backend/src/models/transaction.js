@@ -7,7 +7,8 @@ const TransactionSchema = new mongoose.Schema({
     madeAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    user: String // user_id provided by Auth0
 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);

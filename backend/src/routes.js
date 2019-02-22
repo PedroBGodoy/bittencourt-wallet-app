@@ -4,7 +4,7 @@ const routes = express.Router();
 
 const TransactionController = require('./controllers/TransactionController');
 
-routes.get('/transactions', TransactionController.index);
+routes.get('/transactions/:id', TransactionController.index);
 routes.post('/transactions', TransactionController.store);
 routes.delete('/transactions/:id', TransactionController.delete);
 

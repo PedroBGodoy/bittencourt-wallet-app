@@ -2,9 +2,13 @@ const Transaction = require('../models/transaction');
 
 module.exports = {
     async index(req, res){
-        const transactions = await Transaction.find({}).sort('-madeAt')
-
-        return res.json(transactions);
+        try{
+            const transactions = await Transaction.find({ user: req.params.id }).sort('-madeAt')
+            return res.json(transactions);
+        }catch(err)
+        {
+            console.log(err)
+        }
     },
 
     async store(req, res){
