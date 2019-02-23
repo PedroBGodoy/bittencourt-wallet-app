@@ -1,9 +1,11 @@
 const Transaction = require('../models/transaction');
+const axios = require('axios')
 
 module.exports = {
     async index(req, res){
         try{
             const transactions = await Transaction.find({ user: req.params.id }).sort('-madeAt')
+
             return res.json(transactions);
         }catch(err)
         {

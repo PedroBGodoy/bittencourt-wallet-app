@@ -52,6 +52,7 @@ export default class Login extends Component {
       .then(res => {
         SInfo.setItem("accessToken", res.accessToken, {});
         SInfo.setItem("refreshToken", res.refreshToken, {});
+        SInfo.setItem("idToken", res.idToken, {})
 
         auth0.auth
         .userInfo({ token: res.accessToken })
@@ -71,13 +72,12 @@ export default class Login extends Component {
     this.setState({
       hasInitialized: true
     });
-    let userID = data.sub.split('|')[1]
-    SInfo.setItem('userID', userID, {})
-    this.props.navigation.navigate('Accounts', {name: data.name, userID: userID})
+    SInfo.setItem('userID', data.sub, {})
+    this.props.navigation.navigate('Accounts', {name: data.name})
   }
 
   render() {
-    return (
+    return ( 
       <View style={styles.container}>
         <StatusBar backgroundColor="#212121"/>
         <ActivityIndicator

@@ -22,6 +22,7 @@ export default class Topbar extends Component {
     SInfo.deleteItem('accessToken', {})
     SInfo.deleteItem('refreshToken', {})
     SInfo.deleteItem('userID', {})
+    SInfo.deleteItem('idToken', {})
 
     auth0.webAuth
       .clearSession()
@@ -38,92 +39,37 @@ export default class Topbar extends Component {
     const title = topbar.title
     const settingsButton = topbar.settingsButton
 
-    if(backButton && settingsButton){
-      return(
-        <View style={styles.topBar}>
-        <View style={styles.topBarLeft}>
-         <Icon 
-            name="arrow-back"
+    return(
+      <View style={styles.topBar}>
+      <View style={styles.topBarLeft}>
+      {backButton && (
+          <TouchableOpacity onPress={this.goBack}>
+          <Icon 
+          name="arrow-back"
+          size={24}
+          color="#FFF"
+          />
+          </TouchableOpacity>
+      )}
+      </View>
+
+      <View style={styles.topBarCenter}>
+        <Text style={styles.topBarCenterText}>{title}</Text>
+      </View>
+
+      <View style={styles.topBarRight}>
+      {settingsButton && (
+          <TouchableOpacity onPress={this.handleSettings}>
+          <Icon 
+            name="settings"
             size={24}
             color="#FFF"
           />
-        </View>
-
-        <View style={styles.topBarCenter}>
-          <Text style={styles.topBarCenterText}>{title}</Text>
-        </View>
-
-        <View style={styles.topBarRight}>
-          <Icon 
-              name="settings"
-              size={24}
-              color="#FFF"
-            />
-        </View>
-      </View>
-      )
-    }
-    else if(!backButton && settingsButton){
-      return(
-        <View style={styles.topBar}>
-        <View style={styles.topBarLeft}>
-        </View>
-
-        <View style={styles.topBarCenter}>
-          <Text style={styles.topBarCenterText}>{title}</Text>
-        </View>
-
-        <View style={styles.topBarRight}>
-            <TouchableOpacity onPress={this.handleSettings}>
-            <Icon 
-              name="settings"
-              size={24}
-              color="#FFF"
-            />
-            </TouchableOpacity>
-        </View>
-      </View>
-      )
-    }
-    else if(backButton && !settingsButton){
-      return(
-        <View style={styles.topBar}>
-        <View style={styles.topBarLeft}>
-          <TouchableOpacity
-            onPress={this.goBack}
-          >
-            <Icon 
-              name="arrow-back"
-              size={24}
-              color="#FFF"
-            />
           </TouchableOpacity>
-        </View>
-
-        <View style={styles.topBarCenter}>
-          <Text style={styles.topBarCenterText}>{title}</Text>
-        </View>
-
-        <View style={styles.topBarRight}>
-        </View>
+      )}
       </View>
-      )
-    }
-    else{
-      return(
-        <View style={styles.topBar}>
-        <View style={styles.topBarLeft}>
-        </View>
-
-        <View style={styles.topBarCenter}>
-          <Text style={styles.topBarCenterText}>{title}</Text>
-        </View>
-
-        <View style={styles.topBarRight}>
-        </View>
-      </View>
-      )
-    }
+    </View>
+    )
   }
 }
 

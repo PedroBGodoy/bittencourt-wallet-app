@@ -23,10 +23,10 @@ export default class Card extends Component {
 
   render() {
     return (
-        <View style={styles.card}>
-            <Text style={styles.cardName}>{this.props.cardName}</Text>
-            <Text style={styles.cardBalance}>R${this.state.balance}</Text>
-        </View>
+      <View style={styles.card}>
+          <Text style={styles.cardName}>{this.props.cardName}</Text>
+          <Text style={styles.cardBalance}>R${this.state.balance},00</Text>
+      </View>
     )
   }
 }

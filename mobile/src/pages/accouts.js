@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, StatusBar, FlatList } from 'react-native'
 
 import Swiper from 'react-native-swiper'
 
-import api from '../services/api'
+//import api from '../services/api'
 import SInfo from "react-native-sensitive-info";
 
 import Topbar from '../components/Topbar'
@@ -17,19 +17,29 @@ export default class accouts extends Component {
     transactions: [],
     name: '',
     userID: '',
-    isFetching: false
+    isFetching: false,
+    idToken: '',
+    accessToken: '',
+    apiToken: ''
   }
 
   async componentDidMount(){
     this.setState({name: this.props.navigation.getParam('name', 'Nome do Usuário')})
     const userID = await SInfo.getItem('userID', {})
+    const idToken = await SInfo.getItem('idToken', {})
+    const accessToken = await SInfo.getItem('accessToken', {})
+    this.setState({idToken: idToken})
     this.setState({userID: userID})
+    this.setState({accessToken: accessToken})
 
-    this.getList()
+    //this.getList()
+    this.
+    apiRequestToken().then(res =>
+    this.apiRequestData(res))
   }
 
   refreshList = () =>{
-    this.getList()
+    this.apiRequestData()
   }
 
   getList = async () =>{
@@ -41,6 +51,38 @@ export default class accouts extends Component {
       console.log(error)
     }
     this.setState({isFetching: false})
+  }
+
+  apiRequestToken = async () =>{
+    try{
+      let response = await fetch('https://bittencourt.auth0.com/oauth/token', {
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        body: '{"client_id":"9N2FKDAcGTeeVt5oiWgkpRddwMYf4Iw2","client_secret":"WHmZL3QwmXjiHR_Fu7L0ahVwEJYM9ZwwJdAir19MkPsVehwsdTfBeujSePFgpGYG","audience":"https://walletbittencourt.com/api","grant_type":"client_credentials"}'
+      })
+      let responseJson = await response.json()
+      this.setState({apiToken: responseJson.access_token})
+      SInfo.setItem("apiToken", responseJson.access_token, {})
+      return responseJson
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  apiRequestData = async () =>{
+    let responseJson = undefined
+    try{
+      let response = await fetch(`http://192.168.0.32:3000/transactions/${this.state.userID}`, {
+        headers: { 'authorization': `Bearer ${this.state.apiToken}` },
+      })
+      responseJson = await response.json()
+    }catch(err){
+      console.log(err)
+    }
+    if(responseJson !== undefined)
+    {
+      this.setState({transactions: responseJson})
+    }
   }
 
   render() {

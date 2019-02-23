@@ -13,13 +13,15 @@ export default class newTransaction extends Component {
       transactionDescription: '',
       transactionValue: '',
       transactionType: 'true',
-      user: ''
+      user: '',
+      accessToken: ''
     }
   }
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     SInfo.getItem('userID', {}).then(userID => this.setState({user: userID}))
+    SInfo.getItem('apiToken', {}).then(accessToken => this.setState({accessToken: accessToken}))
   }
 
   componentWillUnmount() {
@@ -36,14 +38,16 @@ export default class newTransaction extends Component {
   }
 
   handleAddNewTransaction = async () => {
-    await api.post('transactions',
-      {
-        "transactionDescription": this.state.transactionDescription,
-        "transactionValue": this.state.transactionValue,
-        "transactionType": this.state.transactionType,
-        "user": this.state.user
-      }
-    )
+    await fetch('http://192.168.0.32:3000/transactions', {
+        method: 'POST',
+        headers: {'authorization': `Bearer ${this.state.accessToken}`, 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          transactionDescription: this.state.transactionDescription,
+          transactionValue: this.state.transactionValue,
+          transactionType: this.state.transactionType,
+          user: this.state.user
+        })
+      })
 
     this.goBack()
   }

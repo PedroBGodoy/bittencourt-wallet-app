@@ -7,6 +7,23 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
+
+var jwtCheck = jwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: "https://bittencourt.auth0.com/.well-known/jwks.json"
+    }),
+    audience: 'https://walletbittencourt.com/api',
+    issuer: "https://bittencourt.auth0.com/",
+    algorithms: ['RS256']
+});
+
+app.use(jwtCheck);
+
 mongoose.connect(
     'mongodb://financebase:financebase10@ds237955.mlab.com:37955/financeapp',
     {

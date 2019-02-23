@@ -7,7 +7,7 @@ export default class Transaction extends Component {
 
   render() {
     const { transaction } = this.props;
-    const dia = parseDate(transaction.madeAt);
+    const day = parseDate(transaction.madeAt);
 
     function parseDate(date){
       let split = date.split('T');
@@ -17,52 +17,35 @@ export default class Transaction extends Component {
       return ret;
     }
 
-    if(transaction.transactionType){
-      return (
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <View style={styles.leftBox}>
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.leftBox}>
+            {transaction.transactionType && (
               <Icon style={styles.iconUp}
-                name="arrow-back"
-                size={30}
+              name="arrow-back"
+              size={30}
               />
-            </View>
-  
-            <View style={styles.centerBox}>
-              <Text style={styles.description}>{transaction.transactionDescription}</Text>
-              <Text style={styles.date}>{dia}</Text>
-            </View>
-  
-            <View style={styles.rightBox}> 
-              <Text style={styles.description}>R${transaction.transactionValue}</Text>
-            </View>
-          </View>
-        </View>
-      )
-    }
-    else{
-      return (
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <View style={styles.leftBox}>
+            )}
+            {!transaction.transactionType && (
               <Icon style={styles.iconDown}
-                name="arrow-back"
-                size={30}
+              name="arrow-back"
+              size={30}
               />
-            </View>
-  
-            <View style={styles.centerBox}>
-              <Text style={styles.description}>{transaction.transactionDescription}</Text>
-              <Text style={styles.date}>{dia}</Text>
-            </View>
-  
-            <View style={styles.rightBox}> 
-              <Text style={styles.description}>R${transaction.transactionValue}</Text>
-            </View>
+            )}
+          </View>
+
+          <View style={styles.centerBox}>
+            <Text style={styles.description}>{transaction.transactionDescription}</Text>
+            <Text style={styles.date}>{day}</Text>
+          </View>
+
+          <View style={styles.rightBox}> 
+            <Text style={styles.description}>R${transaction.transactionValue},00</Text>
           </View>
         </View>
-      )
-    }
+      </View>
+    )
 
   }
 }
