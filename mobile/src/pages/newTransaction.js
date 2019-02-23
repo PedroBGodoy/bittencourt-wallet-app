@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, StatusBar, BackHandler, TouchableOpacity, TextInput, Picker, KeyboardAvoidingView } from 'react-native'
 
-import api from '../services/api'
 import SInfo from "react-native-sensitive-info";
 
 import Topbar from '../components/Topbar'
@@ -38,7 +37,7 @@ export default class newTransaction extends Component {
   }
 
   handleAddNewTransaction = async () => {
-    await fetch('http://192.168.0.32:3000/transactions', {
+    await fetch('https://mighty-wave-79384.herokuapp.com/transactions', {
         method: 'POST',
         headers: {'authorization': `Bearer ${this.state.accessToken}`, 'Content-Type': 'application/json'},
         body: JSON.stringify({

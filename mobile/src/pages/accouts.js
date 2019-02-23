@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, StatusBar, FlatList } from 'react-native'
 
 import Swiper from 'react-native-swiper'
 
-//import api from '../services/api'
 import SInfo from "react-native-sensitive-info";
 
 import Topbar from '../components/Topbar'
@@ -72,7 +71,7 @@ export default class accouts extends Component {
   apiRequestData = async () =>{
     let responseJson = undefined
     try{
-      let response = await fetch(`http://192.168.0.32:3000/transactions/${this.state.userID}`, {
+      let response = await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${this.state.userID}`, {
         headers: { 'authorization': `Bearer ${this.state.apiToken}` },
       })
       responseJson = await response.json()

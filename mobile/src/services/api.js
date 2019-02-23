@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://192.168.0.32:3000',
+    baseURL: 'https://mighty-wave-79384.herokuapp.com/',
 })
 
 export default api;
