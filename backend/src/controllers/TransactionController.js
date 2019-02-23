@@ -1,5 +1,4 @@
 const Transaction = require('../models/transaction');
-const axios = require('axios')
 
 module.exports = {
     async index(req, res){

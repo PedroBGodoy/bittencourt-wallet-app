@@ -5,7 +5,6 @@ const cors = require('cors');
 const app = express();
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
 
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');
@@ -30,12 +29,6 @@ mongoose.connect(
         useNewUrlParser: true
     }
 );
-
-app.use((req, res, next)=>{
-    req.io = io;
-
-    return next();
-});
 
 app.use(cors());
 app.use(express.json());
