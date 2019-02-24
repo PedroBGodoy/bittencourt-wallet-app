@@ -7,24 +7,29 @@ export default class Card extends Component {
     balance: 0
   }
 
+  componentDidMount(){
+    this.calculateBalance()
+  }
+
   componentDidUpdate(){
     this.calculateBalance()
   }
 
   calculateBalance = () =>{
-    let _balance = 0
-    this.props.transactions.forEach(transaction => {
-      _balance = transaction.transactionType ? (_balance + transaction.transactionValue) : (_balance - transaction.transactionValue)
-    })
-    if(this.state.balance !== _balance){
-      this.setState({balance: _balance})
+    if(this.props.transactions !== undefined){
+      let _balance = 0
+      this.props.transactions.forEach(transaction => {
+        _balance = transaction.transactionType ? (_balance + transaction.transactionValue) : (_balance - transaction.transactionValue)
+      })
+      if(this.state.balance !== _balance){
+        this.setState({balance: _balance})
+      }
     }
   }
 
   render() {
     return (
       <View style={styles.card}>
-          <Text style={styles.cardName}>{this.props.cardName}</Text>
           <Text style={styles.cardBalance}>R${this.state.balance},00</Text>
       </View>
     )
@@ -33,7 +38,7 @@ export default class Card extends Component {
 
 const styles = StyleSheet.create({
     card: {
-        height: 150,
+        height: 100,
         justifyContent: "center",
         alignItems: "center",
         marginTop: 25,
@@ -52,6 +57,6 @@ const styles = StyleSheet.create({
       cardBalance: {
         color: '#EFEFEF',
         fontSize: 32,
-        marginTop: 30
+        marginTop: 0
       }
 })

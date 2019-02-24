@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
 
+import Swipeout from 'react-native-swipeout'
+
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-export default class Transaction extends Component {
+import {ApiHandleDeleteTransaction} from '../services/api'
 
+export default class Transaction extends Component {
   render() {
     const { transaction } = this.props;
     const day = parseDate(transaction.madeAt);
@@ -17,7 +20,31 @@ export default class Transaction extends Component {
       return ret;
     }
 
+    async function handleButtonPress(){
+      await this.handleDeleteTransaction()
+      this.refreshList()
+    }
+
+    handleDeleteTransaction = async () =>{
+      await ApiHandleDeleteTransaction(transaction._id)
+    }
+
+    refreshList = () =>{
+      this.props.method()
+    }
+
+    let swipeButtons = [
+      {
+        text: 'Delete',
+        backgroundColor: '#CC3737',
+        onPress: ()=>{
+          handleButtonPress()
+        }
+      }
+    ]
+
     return (
+      <Swipeout right={swipeButtons} backgroundColor={'#212121'} autoClose={true}>
       <View style={styles.container}>
         <View style={styles.content}>
           <View style={styles.leftBox}>
@@ -45,6 +72,7 @@ export default class Transaction extends Component {
           </View>
         </View>
       </View>
+      </Swipeout>
     )
 
   }
@@ -52,17 +80,17 @@ export default class Transaction extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      justifyContent: "center",
-      alignItems: "center"
-    },
-    content: {
-      height: 65,
+      height: 80,
       borderBottomWidth: 0.5,
       borderColor: '#CBCBCB',
+      justifyContent: "center",
+      alignItems: "center",
+      paddingTop: 20,
+      paddingBottom: 20
+    },
+    content: {
       flexDirection: 'row',
       flex: 0.8,
-      marginBottom: 20,
     },
     description: {
       color: "#FFF",

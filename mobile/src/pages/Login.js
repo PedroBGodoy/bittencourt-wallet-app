@@ -41,8 +41,9 @@ export default class Login extends Component {
     })
   }
 
-  handleLogin = () => {
-    auth0.webAuth
+  handleLogin = async () => {
+    this.setState({hasInitialized: false})
+    await auth0.webAuth
       .authorize({
         scope: "openid offline_access profile email",
         audience: "https://bittencourt.auth0.com/userinfo",
@@ -60,11 +61,13 @@ export default class Login extends Component {
           this.changeScene(data);
         })
         .catch(err => {
-          console.log("error occurred while trying to get user details: ", err);
+          console.log("error occurred while trying to get user details: ", err)
+          this.setState({hasInitialized: true})
         });    
       })
       .catch(error => {
         console.log("error occurred while trying to authenticate: ", error);
+        this.setState({hasInitialized: true})
       });
   }
 

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, StatusBar, BackHandler, TouchableOpacity, TextInput, Picker, KeyboardAvoidingView } from 'react-native'
+import { Text, View, StyleSheet, StatusBar, BackHandler, TouchableOpacity, TextInput, Picker } from 'react-native'
 
 import SInfo from "react-native-sensitive-info";
 
 import Topbar from '../components/Topbar'
+
+import { ApiHandleNewTransaction } from '../services/api'
 
 export default class newTransaction extends Component {
   constructor(props) {
@@ -36,17 +38,8 @@ export default class newTransaction extends Component {
     this.props.navigation.navigate('Accounts')
   }
 
-  handleAddNewTransaction = async () => {
-    await fetch('https://mighty-wave-79384.herokuapp.com/transactions', {
-        method: 'POST',
-        headers: {'authorization': `Bearer ${this.state.accessToken}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          transactionDescription: this.state.transactionDescription,
-          transactionValue: this.state.transactionValue,
-          transactionType: this.state.transactionType,
-          user: this.state.user
-        })
-      })
+  handleAddNewTransaction = () => {
+    ApiHandleNewTransaction(this.state.accessToken, this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user)
 
     this.goBack()
   }
