@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, StatusBar, FlatList, ActivityIndicator } from 'react-native'
+import { Text, View, StyleSheet, StatusBar, FlatList, ActivityIndicator, AsyncStorage } from 'react-native'
 
 import SInfo from "react-native-sensitive-info";
 
@@ -22,7 +22,8 @@ export default class accouts extends Component {
   }
 
   async componentDidMount(){
-    this.setState({name: this.props.navigation.getParam('name', 'Nome do Usuário')})
+    const name = await AsyncStorage.getItem("@WalletApp:name")
+    this.setState({name: name})
     
     await this.getUserID()
 

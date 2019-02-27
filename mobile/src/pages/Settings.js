@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, View, StatusBar, StyleSheet, TouchableOpacity, BackHandler } from 'react-native'
 
 import Topbar from '../components/Topbar'
 
@@ -10,24 +10,41 @@ const auth0 = new Auth0({ domain: 'bittencourt.auth0.com', clientId: '4U4Qkc8Ixt
 
 export default class Settings extends Component {
 
-    goToLogin = () =>{
-        this.props.navigation.navigate('Login')
-    }
+  componentDidMount(){
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress)
+  }
 
-    handleLogout = () =>{
-        SInfo.deleteItem('accessToken', {})
-        SInfo.deleteItem('refreshToken', {})
-        SInfo.deleteItem('userID', {})
-        SInfo.deleteItem('idToken', {})
-    
-        auth0.webAuth
-          .clearSession()
-          .catch(err => {
-            console.log('error clearing session: ', err)
-          })
-    
-          this.goToLogin()
-    }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress)
+  }
+
+  handleBackPress = () => {
+    this.goBack();
+    return true;
+  }
+
+  goBack = () =>{
+    this.props.navigation.navigate("Accounts")
+  }
+
+  goToLogin = () =>{
+      this.props.navigation.navigate('Login')
+  }
+
+  handleLogout = () =>{
+      SInfo.deleteItem('accessToken', {})
+      SInfo.deleteItem('refreshToken', {})
+      SInfo.deleteItem('userID', {})
+      SInfo.deleteItem('idToken', {})
+  
+      auth0.webAuth
+        .clearSession()
+        .catch(err => {
+          console.log('error clearing session: ', err)
+        })
+  
+      this.goToLogin()
+  }
     
   render() {
     return (

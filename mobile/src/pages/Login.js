@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator, AsyncStorage } from 'react-native'
 
 import Auth0 from 'react-native-auth0';
 import DeviceInfo from "react-native-device-info";
@@ -14,69 +14,108 @@ export default class Login extends Component {
     hasInitialized: false
   }
 
-  componentDidMount(){
-    SInfo.getItem("accessToken", {}).then(accessToken => {
-      if(accessToken){
-        auth0.auth
-        .userInfo({ token: accessToken })
-        .then(data => {
-          this.changeScene(data);
-        })
-        .catch(err => {
-          SInfo.getItem("refreshToken", {}).then(refreshToken => {
-            auth0.auth
-              .refreshToken({ refreshToken: refreshToken })
-              .then(newAccessToken => {
-                SInfo.setItem("accessToken", newAccessToken, {});
-                RNRestart.Restart();
-              })
-              .catch(accessTokenErr => {
-                console.log("error getting new access token: ", accessTokenErr);
-              });
-          });
-        });
-      }else {
-        this.setState({hasInitialized: true})
+  async componentDidMount(){
+    
+    const accessToken = await this.getAccessTokenStorage()
+
+    if(accessToken){
+      const userData = await this.getUserData(accessToken)
+      if(userData){
+        this.changeScene(userData)
+      }else{
+        const newAccessToken = await this.getNewToken()
+        if(newAccessToken === "[a0.response.invalid: unknown error]"){
+          this.clearSession()
+        }else{
+          this.changeScene(await this.getUserData(newAccessToken))
+        }
       }
-    })
+    }else{
+      this.setState({hasInitialized: true})
+    }
+
   }
 
   handleLogin = async () => {
     this.setState({hasInitialized: false})
-    await auth0.webAuth
+
+    try{
+      const sessionData = await this.authenticateAndResponde()
+      this.setSessionData(sessionData)
+      const userData = await this.getUserData(sessionData.accessToken)
+      this.changeScene(userData)
+    }catch(err){
+      console.log(err)
+      this.setState({hasInitialized: true})
+    }
+  }
+
+  getAccessTokenStorage = () =>{
+    try{
+      const accessToken = SInfo.getItem("accessToken", {})
+      return accessToken
+    }catch(err){
+      throw err
+    }
+  }
+
+  getUserData = accessToken =>{
+    try{
+      const userData = auth0.auth.userInfo({ token: accessToken })
+      return userData
+    }catch(err){
+      throw err
+    }
+  }
+
+  getNewToken = async () =>{
+    const refreshToken = await SInfo.getItem("refreshToken", {})
+
+    try{
+      const newAccessToken = await auth0.auth.refreshToken({ refreshToken: refreshToken })
+      return newAccessToken
+    }catch(err){
+      throw err
+    }
+  }
+
+  clearSession = () =>{
+    SInfo.deleteItem('accessToken', {})
+    SInfo.deleteItem('refreshToken', {})
+    SInfo.deleteItem('userID', {})
+    SInfo.deleteItem('idToken', {})
+  }
+
+  authenticateAndResponde = async () =>{
+    try{
+      const response = await auth0.webAuth
       .authorize({
         scope: "openid offline_access profile email",
         audience: "https://bittencourt.auth0.com/userinfo",
         device: DeviceInfo.getUniqueID(),
         prompt: "login" 
       })
-      .then(res => {
-        SInfo.setItem("accessToken", res.accessToken, {});
-        SInfo.setItem("refreshToken", res.refreshToken, {});
-        SInfo.setItem("idToken", res.idToken, {})
 
-        auth0.auth
-        .userInfo({ token: res.accessToken })
-        .then(data => {
-          this.changeScene(data);
-        })
-        .catch(err => {
-          console.log("error occurred while trying to get user details: ", err)
-          this.setState({hasInitialized: true})
-        });    
-      })
-      .catch(error => {
-        console.log("error occurred while trying to authenticate: ", error);
-        this.setState({hasInitialized: true})
-      });
+      return response
+    }catch(err){
+      throw err
+    }
   }
 
-  changeScene = data =>{
-    this.setState({
-      hasInitialized: true
-    });
-    SInfo.setItem('userID', data.sub, {})
-    this.props.navigation.navigate('Accounts', {name: data.name})
+  setSessionData = sessionData =>{
+    try{
+      SInfo.setItem("accessToken", sessionData.accessToken, {});
+      SInfo.setItem("refreshToken", sessionData.refreshToken, {});
+      SInfo.setItem("idToken", sessionData.idToken, {})
+    }catch(err){
+      console.log("Error saving session data")
+    }               
+  }
+
+  changeScene = async data =>{
+    await SInfo.setItem('userID', data.sub, {})
+    await AsyncStorage.setItem("@WalletApp:name", data.name)
+    this.props.navigation.navigate('Accounts')
   }
 
   render() {
