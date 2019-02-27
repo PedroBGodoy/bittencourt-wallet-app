@@ -17,7 +17,6 @@ export default class accouts extends Component {
     name: '',
     userID: '',
     isFetching: false,
-    apiToken: '',
     loading: true
   }
 
@@ -45,13 +44,12 @@ export default class accouts extends Component {
 
   requestToken = async () =>{
     const token = await ApiRequestToken()
-    this.setState({apiToken: token})
     SInfo.setItem("apiToken", token, {})
   }
 
   requestData = async () =>{
     this.setState({isFetching: true})
-    const transactions = await ApiRequestData(this.state.userID, this.state.apiToken)
+    const transactions = await ApiRequestData(this.state.userID)
     this.setState({transactions: transactions})
     this.setState({isFetching: false})
   }
@@ -83,7 +81,7 @@ export default class accouts extends Component {
             <FlatList 
               data={this.state.transactions}
               keyExtractor={transaction => transaction._id}
-              renderItem={({item}) => <Transaction transaction={item} method={this.refreshList}/>}
+              renderItem={({item}) => <Transaction transaction={item} method={this.refreshList} navigation={this.props.navigation}/>}
               onRefresh={this.refreshList}
               refreshing={this.state.loading}
             />

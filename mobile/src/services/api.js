@@ -1,5 +1,6 @@
-import axios from 'axios'
 import SInfo from "react-native-sensitive-info";
+
+const accessToken = SInfo.getItem('accessToken', {})
 
 export async function ApiRequestToken(){
     try{
@@ -31,7 +32,7 @@ export async function ApiRequestToken(){
     }
   }
 
-  export async function ApiHandleNewTransaction(accessToken, description, value, type, user){
+  export async function ApiHandleNewTransaction(description, value, type, user){
     await fetch('https://mighty-wave-79384.herokuapp.com/transactions', {
       method: 'POST',
       headers: {'authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
@@ -44,7 +45,7 @@ export async function ApiRequestToken(){
     })
   }
 
-  export async function ApiHandleUpdateTransaction(accessToken, id, description, value, type, user){
+  export async function ApiHandleUpdateTransaction(id, description, value, type, user){
     await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${id}`, {
       method: 'PUT',
       headers: {'authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
@@ -58,7 +59,6 @@ export async function ApiRequestToken(){
   }
 
   export async function ApiHandleDeleteTransaction(id){
-    const accessToken = await SInfo.getItem('accessToken', {})
     await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${id}`, {
       method: 'DELETE',
       headers: {'authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},

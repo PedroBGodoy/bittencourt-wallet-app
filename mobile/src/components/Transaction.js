@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 
 import Swipeout from 'react-native-swipeout'
 
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import {ApiHandleDeleteTransaction} from '../services/api'
 
 export default class Transaction extends Component {
+
   render() {
     const { transaction } = this.props;
     const day = parseDate(transaction.madeAt);
@@ -20,13 +21,26 @@ export default class Transaction extends Component {
       return ret;
     }
 
-    async function handleButtonPress(){
-      await this.handleDeleteTransaction()
+    async function handleDeleteButtonPress(id){
+      await this.handleDeleteTransaction(id)
       this.refreshList()
     }
 
-    handleDeleteTransaction = async () =>{
-      await ApiHandleDeleteTransaction(transaction._id)
+    function handleEditButtonPress(data){
+      this.handleEditButton(data)
+    }
+
+    handleDeleteTransaction = async id =>{
+      await ApiHandleDeleteTransaction(id)
+    }
+
+    handleEditButton = data =>{
+      this.props.navigation.navigate('EditTransaction', {
+        description: data.transactionDescription,
+        value: data.transactionValue.toString(),
+        type: data.transactionType,
+        id: data._id
+      })
     }
 
     refreshList = () =>{
@@ -38,7 +52,14 @@ export default class Transaction extends Component {
         text: 'Delete',
         backgroundColor: '#CC3737',
         onPress: ()=>{
-          handleButtonPress()
+          handleDeleteButtonPress(this.props.transaction._id)
+        }
+      },
+      {
+        text: 'Edit',
+        backgroundColor: '#DBDB32',
+        onPress: () => {
+          handleEditButtonPress(this.props.transaction)
         }
       }
     ]

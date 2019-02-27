@@ -4,7 +4,6 @@ import { Text, View, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator,
 import Auth0 from 'react-native-auth0';
 import DeviceInfo from "react-native-device-info";
 import SInfo from "react-native-sensitive-info";
-import RNRestart from "react-native-restart";
 
 const auth0 = new Auth0({ domain: 'bittencourt.auth0.com', clientId: '4U4Qkc8IxtVEL1kc0MDu6LlCgTcmmhXi' });
 
@@ -15,7 +14,7 @@ export default class Login extends Component {
   }
 
   async componentDidMount(){
-    
+
     const accessToken = await this.getAccessTokenStorage()
 
     if(accessToken){

@@ -15,14 +15,12 @@ export default class newTransaction extends Component {
       transactionValue: '',
       transactionType: 'true',
       user: '',
-      accessToken: ''
     }
   }
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     SInfo.getItem('userID', {}).then(userID => this.setState({user: userID}))
-    SInfo.getItem('apiToken', {}).then(accessToken => this.setState({accessToken: accessToken}))
   }
 
   componentWillUnmount() {
@@ -39,7 +37,7 @@ export default class newTransaction extends Component {
   }
 
   handleAddNewTransaction = () => {
-    ApiHandleNewTransaction(this.state.accessToken, this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user)
+    ApiHandleNewTransaction(this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user)
 
     this.goBack()
   }
