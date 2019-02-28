@@ -120,20 +120,27 @@ export default class Login extends Component {
   render() {
     return ( 
       <View style={styles.container}>
-        <StatusBar backgroundColor="#212121"/>
+        <StatusBar backgroundColor="#262F49"/>
+
+        {this.state.hasInitialized && (
+          <View style={styles.content}>
+            <Text style={styles.title}>WALLET APP</Text>
+            <TouchableOpacity 
+            style={styles.loginButton}
+            onPress={this.handleLogin}
+            >
+            <Text style={styles.loginText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <ActivityIndicator
           size='large'
           color='#05a5d1'
           animating={!this.state.hasInitialized}
+          style={styles.loading}
         />
-        {this.state.hasInitialized && (
-          <TouchableOpacity 
-            style={styles.loginButton}
-            onPress={this.handleLogin}
-          >
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
-        )}
+
       </View>
     )
   }
@@ -143,19 +150,48 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#212121'
+    backgroundColor: '#262F49'
+  },
+  content: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center"
+  },
+  title: {
+    color: '#8C97B5',
+    fontWeight: '100',
+    margin: 60,
+    fontSize: 30
   },
   loginButton: {
     height: 50,
     width: 250,
-    backgroundColor: '#e6e6e6',
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: '#323C57',
+    borderRadius: 5,
+    marginTop: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    },
+    elevation: 5
   },
   loginText: {
-    color: '#000000',
-    fontSize: 14
+    color: '#8C97B5',
+    fontSize: 14,
+    fontWeight: '100',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })

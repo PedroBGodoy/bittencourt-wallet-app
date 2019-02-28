@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
         alignItems: "center"
       },
       addTransactionButton: {
-        height: 55,
-        width: 55,
-        borderRadius: 50,
-        backgroundColor: '#43C545',
+        height: 60,
+        width: 60,
+        borderRadius: 5,
+        backgroundColor: '#323C57',
         justifyContent: "center",
         alignItems: "center",
         shadowColor: "#000000",

@@ -49,51 +49,52 @@ export default class Transaction extends Component {
 
     let swipeButtons = [
       {
-        text: 'Delete',
-        backgroundColor: '#CC3737',
-        onPress: ()=>{
-          handleDeleteButtonPress(this.props.transaction._id)
+        text: 'Edit',
+        backgroundColor: '#262F49',
+        onPress: () => {
+          handleEditButtonPress(this.props.transaction)
         }
       },
       {
-        text: 'Edit',
-        backgroundColor: '#DBDB32',
-        onPress: () => {
-          handleEditButtonPress(this.props.transaction)
+        text: 'Delete',
+        backgroundColor: '#20273E',
+        onPress: ()=>{
+          handleDeleteButtonPress(this.props.transaction._id)
         }
       }
     ]
 
     return (
-      <Swipeout right={swipeButtons} backgroundColor={'#212121'} autoClose={true}>
+      
       <View style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.leftBox}>
-            {transaction.transactionType && (
-              <Icon style={styles.iconUp}
-              name="arrow-back"
-              size={30}
-              />
-            )}
-            {!transaction.transactionType && (
-              <Icon style={styles.iconDown}
-              name="arrow-back"
-              size={30}
-              />
-            )}
-          </View>
+        <Swipeout right={swipeButtons} backgroundColor={'#262F49'} autoClose={true} style={styles.swipeBox}>
+          <View style={styles.content}>
+            <View style={styles.leftBox}>
+              {transaction.transactionType && (
+                <Icon style={styles.iconUp}
+                name="arrow-back"
+                size={30}
+                />
+              )}
+              {!transaction.transactionType && (
+                <Icon style={styles.iconDown}
+                name="arrow-back"
+                size={30}
+                />
+              )}
+            </View>
 
-          <View style={styles.centerBox}>
-            <Text style={styles.description}>{transaction.transactionDescription}</Text>
-            <Text style={styles.date}>{day}</Text>
-          </View>
+            <View style={styles.centerBox}>
+              <Text style={styles.description}>{transaction.transactionDescription}</Text>
+              <Text style={styles.date}>{day}</Text>
+            </View>
 
-          <View style={styles.rightBox}> 
-            <Text style={styles.description}>R${transaction.transactionValue},00</Text>
+            <View style={styles.rightBox}> 
+              <Text style={styles.description}>R${transaction.transactionValue},00</Text>
+            </View>
           </View>
-        </View>
+        </Swipeout>
       </View>
-      </Swipeout>
     )
 
   }
@@ -101,17 +102,31 @@ export default class Transaction extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      height: 80,
-      borderBottomWidth: 0.5,
-      borderColor: '#CBCBCB',
       justifyContent: "center",
       alignItems: "center",
-      paddingTop: 20,
-      paddingBottom: 20
+      paddingTop: 10,
+      paddingBottom: 10,
+      flexDirection: 'row',
+      flex: 1
+    },
+    swipeBox: {
+      height: 80,
+      flex: 0.9,
+      shadowColor: "#000000",
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      shadowOffset: {
+        height: 1,
+        width: 1
+      },
+      elevation: 5
     },
     content: {
+      height: 80,
+      backgroundColor: '#323C57',
+      borderRadius: 5,
       flexDirection: 'row',
-      flex: 0.8,
+      paddingTop: 25
     },
     description: {
       color: "#FFF",

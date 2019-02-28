@@ -49,7 +49,7 @@ export default class Settings extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="#212121"/>
+        <StatusBar backgroundColor="#262F49"/>
         <Topbar topbar={{backButton: true, title: 'Settings', settingsButton: false}} navigation={this.props.navigation}/>
 
         <TouchableOpacity onPress={this.handleLogout}>
@@ -66,13 +66,11 @@ export default class Settings extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#212121'
+        backgroundColor: '#262F49'
     },
     item: {
         height: 60,
-        borderColor: '#333333',
-        borderWidth: 1,
-        backgroundColor: '#272727',
+        backgroundColor: '#323C57',
         justifyContent: 'center',
         padding: 20
     },

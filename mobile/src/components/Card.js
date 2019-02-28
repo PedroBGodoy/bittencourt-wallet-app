@@ -38,17 +38,23 @@ export default class Card extends Component {
 
 const styles = StyleSheet.create({
     card: {
-        height: 100,
+        height: 150,
         justifyContent: "center",
         alignItems: "center",
         marginTop: 25,
         marginLeft: 50,
         marginRight: 50,
         marginBottom: 10,
-        borderBottomColor: '#CBCBCB',
-        borderBottomWidth: 0.5,
-        borderTopColor: '#CBCBCB',
-        borderTopWidth: 0.5,
+        borderRadius: 5,
+        backgroundColor: '#323C57',
+        shadowColor: "#000000",
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        shadowOffset: {
+          height: 1,
+          width: 1
+        },
+        elevation: 5
       },
       cardName: {
         color: '#EFEFEF',

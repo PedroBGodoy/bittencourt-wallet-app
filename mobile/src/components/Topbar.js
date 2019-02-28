@@ -27,7 +27,7 @@ export default class Topbar extends Component {
           <Icon 
           name="arrow-back"
           size={24}
-          color="#FFF"
+          color="#4C5B84"
           />
           </TouchableOpacity>
       )}
@@ -43,7 +43,7 @@ export default class Topbar extends Component {
           <Icon 
             name="settings"
             size={24}
-            color="#FFF"
+            color="#4C5B84"
           />
           </TouchableOpacity>
       )}
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
       alignItems: "center"
     },
     topBarCenterText: {
-      color: '#FFF',
-      fontSize: 18
+      color: '#8C97B5',
+      fontSize: 14,
+      fontWeight: '100'
     }
   });

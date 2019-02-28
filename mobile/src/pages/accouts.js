@@ -55,11 +55,12 @@ export default class accouts extends Component {
   }
 
   render() {
-    if(this.state.loading)
-    {
+
+    if(this.state.loading){
       return(
         <View style={styles.loadingContainer}>
-          <StatusBar backgroundColor="#212121"/>
+          <StatusBar backgroundColor="#262F49"/>
+
           <ActivityIndicator
           size='large'
           color='#05a5d1'
@@ -67,56 +68,72 @@ export default class accouts extends Component {
           />
         </View>
       )
-    }else{
+    }else
+    {
       return (
         <View style={styles.container}>
-          <StatusBar backgroundColor="#212121"/>
+          <StatusBar backgroundColor="#262F49"/>
   
-          <Topbar topbar={{backButton: false, title: this.state.name, settingsButton: true}} navigation={this.props.navigation}/>
+          <Topbar topbar={{backButton: false, title: 'CARTEIRA', settingsButton: true}} navigation={this.props.navigation}/>
   
-          <Card cardName={'Nome do Cartão'} transactions={this.state.transactions}/>
+          <Card transactions={this.state.transactions}/>
   
-          <View style={styles.activityWrapper}>
-            <Text style={styles.activityTitle}>Transações Recentes</Text>
-            <FlatList 
-              data={this.state.transactions}
-              keyExtractor={transaction => transaction._id}
-              renderItem={({item}) => <Transaction transaction={item} method={this.refreshList} navigation={this.props.navigation}/>}
-              onRefresh={this.refreshList}
-              refreshing={this.state.loading}
-            />
+          <View style={styles.activityContainer}>
+            <View style={styles.activityContent}>
+              <Text style={styles.activityTitle}>Transações</Text>
+              <FlatList 
+                data={this.state.transactions}
+                keyExtractor={transaction => transaction._id}
+                renderItem={({item}) => <Transaction transaction={item} method={this.refreshList} navigation={this.props.navigation}/>}
+                onRefresh={this.refreshList}
+                refreshing={this.state.loading}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
           </View>
   
           <AddTransactionButton navigation={this.props.navigation}/>
-  
         </View>
       )
+  
+    }
     }
   }
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#212121",
+    backgroundColor: "#262F49",
   },
   swiperWrapper: {
     height: 230,
   },
-  activityWrapper: {
+  activityContainer: {
     flex: 1,
-    marginTop: 50
+    marginTop: 30,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  activityContent: {
+    flex: 0.9
   },
   activityTitle: {
-    textAlign: 'center',
     fontSize: 18,
-    color: "#FFF",
-    marginBottom: 10
+    color: "#8C97B5",
+    marginBottom: 10,
+    marginLeft: 30,
+    fontWeight: '100'
   },
   loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     alignItems: 'center',
-    backgroundColor: '#212121'
+    justifyContent: 'center',
+    backgroundColor: '#262F49',
+    flex: 1
   }
 });
