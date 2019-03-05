@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StatusBar, StyleSheet, TouchableOpacity, BackHandler } from 'react-native'
+import { Text, View, StatusBar, StyleSheet, TouchableOpacity, BackHandler, Platform } from 'react-native'
 
 import Topbar from '../components/Topbar'
 
@@ -37,11 +37,13 @@ export default class Settings extends Component {
       SInfo.deleteItem('userID', {})
       SInfo.deleteItem('idToken', {})
   
-      auth0.webAuth
+      if(Platform.OS === 'ios'){
+        auth0.webAuth
         .clearSession()
         .catch(err => {
           console.log('error clearing session: ', err)
         })
+      }
   
       this.goToLogin()
   }

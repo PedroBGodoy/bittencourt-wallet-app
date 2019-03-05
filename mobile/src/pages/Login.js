@@ -4,8 +4,10 @@ import { Text, View, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator,
 import Auth0 from 'react-native-auth0';
 import DeviceInfo from "react-native-device-info";
 import SInfo from "react-native-sensitive-info";
+import RNRestart from 'react-native-restart'
+import Config from 'react-native-config'
 
-const auth0 = new Auth0({ domain: 'bittencourt.auth0.com', clientId: '4U4Qkc8IxtVEL1kc0MDu6LlCgTcmmhXi' });
+const auth0 = new Auth0({ domain: Config.DOMAIN_URL, clientId: Config.CLIENT_ID_AUTH0 });
 
 export default class Login extends Component {
 
@@ -15,74 +17,78 @@ export default class Login extends Component {
 
   async componentDidMount(){
 
-    const accessToken = await this.getAccessTokenStorage()
+    const accessToken = await this.getAccessTokenFromStorage();
 
     if(accessToken){
-      const userData = await this.getUserData(accessToken)
-      if(userData){
-        this.changeScene(userData)
-      }else{
-        const newAccessToken = await this.getNewToken()
-        if(newAccessToken === "[a0.response.invalid: unknown error]"){
-          this.clearSession()
+      try {
+        const userData = await this.getUserData(accessToken);
+        if(userData){
+          this.changeScene(userData);
         }else{
-          this.changeScene(await this.getUserData(newAccessToken))
+          const newAccessToken = await this.getNewToken();
+          const userData = await this.getUserData(newAccessToken);
+          this.changeScene(userData);
         }
+      } catch (err) {
+        this.clearSession();
+        RNRestart.Restart();
       }
     }else{
-      this.setState({hasInitialized: true})
+      this.setState({hasInitialized: true});
     }
-
   }
 
   handleLogin = async () => {
-    this.setState({hasInitialized: false})
+    this.setState({hasInitialized: false});
 
     try{
-      const sessionData = await this.authenticateAndResponde()
-      this.setSessionData(sessionData)
-      const userData = await this.getUserData(sessionData.accessToken)
-      this.changeScene(userData)
+      const sessionData = await this.authenticateAndResponde();
+      this.setSessionData(sessionData);
+      const userData = await this.getUserData(sessionData.accessToken);
+      this.changeScene(userData);
     }catch(err){
-      console.log(err)
-      this.setState({hasInitialized: true})
+      console.log(err);
+      this.setState({hasInitialized: true});
     }
   }
 
-  getAccessTokenStorage = () =>{
+  getAccessTokenFromStorage = () =>{
     try{
-      const accessToken = SInfo.getItem("accessToken", {})
-      return accessToken
+      const accessToken = SInfo.getItem("accessToken", {});
+      return accessToken;
     }catch(err){
-      throw err
+      throw err;
     }
   }
 
-  getUserData = accessToken =>{
+  getUserData = async accessToken =>{
     try{
-      const userData = auth0.auth.userInfo({ token: accessToken })
-      return userData
+      const userData = await auth0.auth.userInfo({ token: accessToken });
+      return userData;
     }catch(err){
-      throw err
+      throw err;
     }
   }
 
   getNewToken = async () =>{
-    const refreshToken = await SInfo.getItem("refreshToken", {})
-
     try{
-      const newAccessToken = await auth0.auth.refreshToken({ refreshToken: refreshToken })
-      return newAccessToken
+      const refreshToken = await SInfo.getItem("refreshToken", {});
+      const newAccessToken = await auth0.auth.refreshToken({ refreshToken: refreshToken });
+      return newAccessToken;
     }catch(err){
-      throw err
+      throw err;
     }
   }
 
   clearSession = () =>{
-    SInfo.deleteItem('accessToken', {})
-    SInfo.deleteItem('refreshToken', {})
-    SInfo.deleteItem('userID', {})
-    SInfo.deleteItem('idToken', {})
+    try {
+      SInfo.deleteItem('accessToken', {});
+      SInfo.deleteItem('refreshToken', {});
+      SInfo.deleteItem('userID', {});
+      SInfo.deleteItem('idToken', {});
+    } catch (err) {
+      throw err;
+    }
   }
 
   authenticateAndResponde = async () =>{
@@ -93,11 +99,11 @@ export default class Login extends Component {
         audience: "https://bittencourt.auth0.com/userinfo",
         device: DeviceInfo.getUniqueID(),
         prompt: "login" 
-      })
+      });
 
-      return response
+      return response;
     }catch(err){
-      throw err
+      throw err;
     }
   }
 
@@ -107,14 +113,14 @@ export default class Login extends Component {
       SInfo.setItem("refreshToken", sessionData.refreshToken, {});
       SInfo.setItem("idToken", sessionData.idToken, {})
     }catch(err){
-      console.log("Error saving session data")
+      console.log("Error saving session data");
     }               
   }
 
   changeScene = async data =>{
-    await SInfo.setItem('userID', data.sub, {})
-    await AsyncStorage.setItem("@WalletApp:name", data.name)
-    this.props.navigation.navigate('Accounts')
+    await SInfo.setItem('userID', data.sub, {});
+    await AsyncStorage.setItem("@WalletApp:name", data.name);
+    this.props.navigation.navigate('Accounts');
   }
 
   render() {
