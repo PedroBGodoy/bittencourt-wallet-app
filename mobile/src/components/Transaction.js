@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
 import Swipeout from 'react-native-swipeout'
-
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import SInfo from 'react-native-sensitive-info'
 
 import {ApiHandleDeleteTransaction} from '../services/api'
 
@@ -31,7 +31,8 @@ export default class Transaction extends Component {
     }
 
     handleDeleteTransaction = async id =>{
-      await ApiHandleDeleteTransaction(id)
+      const apiToken = await SInfo.getItem('apiToken', {});
+      await ApiHandleDeleteTransaction(id, apiToken);
     }
 
     handleEditButton = data =>{

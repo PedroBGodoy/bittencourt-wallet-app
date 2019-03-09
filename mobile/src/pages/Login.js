@@ -111,7 +111,7 @@ export default class Login extends Component {
     try{
       SInfo.setItem("accessToken", sessionData.accessToken, {});
       SInfo.setItem("refreshToken", sessionData.refreshToken, {});
-      SInfo.setItem("idToken", sessionData.idToken, {})
+      SInfo.setItem("idToken", sessionData.idToken, {});
     }catch(err){
       console.log("Error saving session data");
     }               

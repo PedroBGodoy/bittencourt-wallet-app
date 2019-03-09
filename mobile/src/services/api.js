@@ -1,7 +1,3 @@
-import SInfo from "react-native-sensitive-info";
-
-const accessToken = SInfo.getItem('accessToken', {})
-
 export async function ApiRequestToken(){
     try{
       let response = await fetch('https://bittencourt.auth0.com/oauth/token', {
@@ -32,10 +28,10 @@ export async function ApiRequestToken(){
     }
   }
 
-  export async function ApiHandleNewTransaction(description, value, type, user){
+  export async function ApiHandleNewTransaction(description, value, type, user, apiToken){
     await fetch('https://mighty-wave-79384.herokuapp.com/transactions', {
       method: 'POST',
-      headers: {'authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
+      headers: {'authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json'},
       body: JSON.stringify({
         transactionDescription: description,
         transactionValue: value,
@@ -45,10 +41,10 @@ export async function ApiRequestToken(){
     })
   }
 
-  export async function ApiHandleUpdateTransaction(id, description, value, type, user){
+  export async function ApiHandleUpdateTransaction(id, description, value, type, user, apiToken){
     await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${id}`, {
       method: 'PUT',
-      headers: {'authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
+      headers: {'authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json'},
       body: JSON.stringify({
         transactionDescription: description,
         transactionValue: value,
@@ -58,9 +54,9 @@ export async function ApiRequestToken(){
     })
   }
 
-  export async function ApiHandleDeleteTransaction(id){
+  export async function ApiHandleDeleteTransaction(id, apiToken){
     await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${id}`, {
       method: 'DELETE',
-      headers: {'authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
+      headers: {'authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json'},
     })
   }

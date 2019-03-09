@@ -15,12 +15,17 @@ export default class newTransaction extends Component {
       transactionValue: '',
       transactionType: 'true',
       user: '',
+      apiToken: ''
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    SInfo.getItem('userID', {}).then(userID => this.setState({user: userID}))
+    const userID = await SInfo.getItem('userID', {});
+    this.setState({user: userID});
+    const apiToken = await SInfo.getItem('apiToken', {});
+    this.setState({apiToken: apiToken});
+    
   }
 
   componentWillUnmount() {
@@ -37,7 +42,7 @@ export default class newTransaction extends Component {
   }
 
   handleAddNewTransaction = () => {
-    ApiHandleNewTransaction(this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user)
+    ApiHandleNewTransaction(this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user, this.state.apiToken)
 
     this.goBack()
   }

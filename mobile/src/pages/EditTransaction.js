@@ -13,12 +13,17 @@ export default class EditTransaction extends Component {
       transactionValue: '',
       transactionType: 'true',
       user: '',
-      transactionID: ''
+      transactionID: '',
+      apiToken: ''
   }
 
   async componentDidMount() {
       BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-      await SInfo.getItem('userID', {}).then(userID => this.setState({user: userID}))
+      const userID = await SInfo.getItem('userID', {});
+      const apiToken = await SInfo.getItem('apiToken', {});
+
+      this.setState({user: userID});
+      this.setState({apiToken: apiToken});
 
       const { navigation } = this.props
 
@@ -40,7 +45,7 @@ export default class EditTransaction extends Component {
   }
 
   handleEditTransaction = () =>{
-    ApiHandleUpdateTransaction(this.state.transactionID, this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user)
+    ApiHandleUpdateTransaction(this.state.transactionID, this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user, this.state.apiToken)
     this.goBack()
   }
 

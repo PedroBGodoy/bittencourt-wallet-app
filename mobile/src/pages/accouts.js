@@ -17,7 +17,8 @@ export default class accouts extends Component {
     name: '',
     userID: '',
     isFetching: false,
-    loading: true
+    loading: true,
+    apiToken: ''
   }
 
   async componentDidMount(){
@@ -44,12 +45,13 @@ export default class accouts extends Component {
 
   requestToken = async () =>{
     const token = await ApiRequestToken()
-    SInfo.setItem("apiToken", token, {})
+    this.setState({ apiToken: token })
+    await SInfo.setItem("apiToken", token, {})
   }
 
   requestData = async () =>{
     this.setState({isFetching: true})
-    const transactions = await ApiRequestData(this.state.userID)
+    const transactions = await ApiRequestData(this.state.userID, this.state.apiToken)
     this.setState({transactions: transactions})
     this.setState({isFetching: false})
   }
