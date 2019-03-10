@@ -1,93 +1,203 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, StatusBar, BackHandler, TouchableOpacity, TextInput, Picker } from 'react-native'
+import React, { Component } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  StatusBar,
+  BackHandler,
+  TouchableOpacity,
+  TextInput,
+  Alert
+} from "react-native";
 
 import SInfo from "react-native-sensitive-info";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { TextInputMask } from "react-native-masked-text";
 
-import Topbar from '../components/Topbar'
+import Topbar from "../components/Topbar";
 
-import { ApiHandleNewTransaction } from '../services/api'
+import { ApiHandleNewTransaction } from "../services/api";
+
+import { primaryColor, statusColor, lighColor } from "../styles/common.js";
 
 export default class newTransaction extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      transactionDescription: '',
-      transactionValue: '',
-      transactionType: 'true',
-      user: '',
-      apiToken: ''
-    }
+      transactionDescription: "NOME DA TRANSAÇÃO",
+      transactionValue: "0",
+      transactionType: "true",
+      user: "",
+      apiToken: ""
+    };
+    this.rawValueRef;
   }
 
   async componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    const userID = await SInfo.getItem('userID', {});
-    this.setState({user: userID});
-    const apiToken = await SInfo.getItem('apiToken', {});
-    this.setState({apiToken: apiToken});
-    
+    BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
+    const userID = await SInfo.getItem("userID", {});
+    this.setState({ user: userID });
+    const apiToken = await SInfo.getItem("apiToken", {});
+    this.setState({ apiToken: apiToken });
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackPress);
   }
 
   handleBackPress = () => {
     this.goBack();
     return true;
-  }
+  };
 
   goBack = async () => {
-    this.props.navigation.navigate('Accounts')
-  }
+    this.props.navigation.navigate("Accounts");
+  };
 
   handleAddNewTransaction = () => {
-    ApiHandleNewTransaction(this.state.transactionDescription, this.state.transactionValue, this.state.transactionType, this.state.user, this.state.apiToken)
+    if (this.checkInput()) {
+      ApiHandleNewTransaction(
+        this.state.transactionDescription,
+        this.rawValueRef.getRawValue(),
+        this.state.transactionType,
+        this.state.user,
+        this.state.apiToken
+      );
 
-    this.goBack()
-  }
-
-  handleDescriptionChange = (text) => {
-    this.setState({transactionDescription: text})
-  }
-
-  handleValueChange = (text) => {
-    let newText = ''
-    let numbers = '0123456789'
-
-    for (let i = 0; i < text.length; i++) {
-      if(numbers.indexOf(text[i]) > -1)
-      {
-        newText = newText + text[i]
-      }else{
-        
-      }
+      this.goBack();
     }
-    this.setState({transactionValue: newText})
-  }
+  };
+
+  checkInput = () => {
+    if (this.state.transactionDescription === "NOME DA TRANSAÇÃO") {
+      Alert.alert("Alerta", "Por favor altere o nome da transação");
+      return false;
+    }
+
+    if (this.state.transactionDescription.trim() === "") {
+      Alert.alert("Alerta", "Por favor coloque um nome na transação");
+      return false;
+    }
+
+    if (this.rawValueRef.getRawValue() === 0) {
+      Alert.alert("Alerta", "Por favor coloque um valor para a transação");
+      return false;
+    }
+
+    return true;
+  };
+
+  handleDescriptionChange = text => {
+    this.setState({ transactionDescription: text });
+  };
+
+  handleValueChange = text => {
+    this.setState({ transactionValue: text });
+  };
+
+  handleBtnGanho = () => {
+    this.setState({ transactionType: true });
+  };
+
+  handleBtnDespesa = () => {
+    this.setState({ transactionType: false });
+  };
 
   render() {
-    const { navigation } = this.props;
-    const backButton = navigation.getParam('backButton', true)
-    const title = navigation.getParam('title', 'Nome Do Usuário')
-    const settingsButton = navigation.getParam('settingsButton', true)
-
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="#212121"/>
-        <Topbar topbar={{backButton, title, settingsButton}} navigation={this.props.navigation}/>
+        <StatusBar backgroundColor={statusColor} />
+        <Topbar
+          topbar={{
+            leftButton: true,
+            leftIcon: "arrow-left",
+            leftMethod: this.goBack,
 
-        <View style={styles.content}>
-          <TextInput placeholder="Descrição" style={styles.textInput} autoCapitalize='sentences' autoCorrect={true} onChangeText={this.handleDescriptionChange}/>
-          <TextInput placeholder="R$00,00" style={styles.textInput} onChangeText={this.handleValueChange} value={this.state.transactionValue} keyboardType='numeric'/>
+            title: "NOVA",
+
+            rightButton: true,
+            rightIcon: "check",
+            rightMethod: this.handleAddNewTransaction
+          }}
+          navigation={this.props.navigation}
+        />
+
+        <View style={styles.contentWrapper}>
+          <View style={styles.contentHead}>
+            <TouchableOpacity
+              style={
+                this.state.transactionType
+                  ? styles.headButtonSelected
+                  : styles.headButton
+              }
+              onPress={this.handleBtnGanho}
+            >
+              <Text style={styles.headText}>GANHO</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                this.state.transactionType
+                  ? styles.headButton
+                  : styles.headButtonSelected
+              }
+              onPress={this.handleBtnDespesa}
+            >
+              <Text style={styles.headText}>DESPESA</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.contentBody}>
+            <View style={styles.contentBodyBox}>
+              <View style={styles.editIcon}>
+                <Icon name="edit" size={20} color="#878787" />
+              </View>
+              <View style={styles.bodyTextWrapper}>
+                <TextInputMask
+                  type={"money"}
+                  value={this.state.transactionValue}
+                  onChangeText={this.handleValueChange}
+                  style={styles.bodyText}
+                  ref={ref => (this.rawValueRef = ref)}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.contentFooter}>
+            <View style={styles.contentFooterBox}>
+              <View style={styles.editIcon}>
+                <Icon name="edit" size={20} color="#878787" />
+              </View>
+              <TextInput
+                style={styles.footerText}
+                onChangeText={this.handleDescriptionChange}
+              >
+                {this.state.transactionDescription}
+              </TextInput>
+            </View>
+          </View>
+
+          {/* <TextInput
+            placeholder="Descrição"
+            style={styles.textInput}
+            autoCapitalize="sentences"
+            autoCorrect={true}
+            onChangeText={this.handleDescriptionChange}
+          />
+          <TextInput
+            placeholder="R$00,00"
+            style={styles.textInput}
+            onChangeText={this.handleValueChange}
+            value={this.state.transactionValue}
+            keyboardType="numeric"
+          />
           <Picker
             selectedValue={this.state.transactionType}
             style={styles.picker}
             onValueChange={(itemValue, itemIndex) =>
-              this.setState({transactionType: itemValue})
-            }>
-            <Picker.Item label="Depósito" value='true' />
-            <Picker.Item label="Gasto" value='false' />
+              this.setState({ transactionType: itemValue })
+            }
+          >
+            <Picker.Item label="Depósito" value="true" />
+            <Picker.Item label="Gasto" value="false" />
           </Picker>
           <View>
             <TouchableOpacity
@@ -96,50 +206,95 @@ export default class newTransaction extends Component {
             >
               <Text>Adicionar</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        backgroundColor: '#212121'
-    },
-    content: {
-      flex: 1,
-      justifyContent: "flex-start",
-      alignItems: "center",
-      paddingTop: 50
-    },
-    addTransactionButton: {
-      height: 40,
-      width: 300,
-      backgroundColor: 'white',
-      borderColor: '#D4D4D4',
-      borderWidth: 0.5,
-      justifyContent: "center",
-      alignItems: "center",
-      margin: 10
-    },
-    textInput: {
-      height: 40,
-      width: 300,
-      backgroundColor: 'white',
-      borderColor: '#D4D4D4',
-      borderWidth: 0.5,
-      margin: 10
-    },
-    picker: {
-      height: 40,
-      width: 300,
-      backgroundColor: 'white',
-      borderColor: '#D4D4D4',
-      borderWidth: 0.5,
-      justifyContent: "center",
-      alignItems: "center",
-      margin: 10
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: primaryColor
+  },
+  contentWrapper: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: 10,
+    paddingTop: 50,
+    flexDirection: "column"
+  },
+  contentHead: {
+    flexDirection: "row"
+  },
+  headButton: {
+    height: 60,
+    backgroundColor: "#24293B",
+    flex: 0.5,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5
+  },
+  headButtonSelected: {
+    height: 60,
+    backgroundColor: "#1A1E2D",
+    flex: 0.5,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 3
+  },
+  headText: {
+    textAlign: "center",
+    color: "#FFF"
+  },
+  contentBody: {
+    flexDirection: "row",
+    elevation: 8
+  },
+  contentFooter: {
+    flexDirection: "row"
+  },
+  editIcon: {
+    alignSelf: "flex-end",
+    paddingRight: 10,
+    paddingTop: 10
+  },
+  bodyText: {
+    fontSize: 30,
+    color: "#303030",
+    textAlign: "center",
+    padding: 0
+  },
+  bodySmallText: {
+    fontSize: 15,
+    color: "#303030",
+    textAlign: "center",
+    paddingTop: 15
+  },
+  footerText: {
+    height: 50,
+    fontSize: 18,
+    color: "#FFF",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  contentBodyBox: {
+    flex: 1,
+    height: 130,
+    backgroundColor: lighColor
+  },
+  contentFooterBox: {
+    flex: 1,
+    height: 80,
+    backgroundColor: "#24293B",
+    elevation: 5
+  },
+  bodyTextWrapper: {
+    alignSelf: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingTop: 15
+  }
+});
