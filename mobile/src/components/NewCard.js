@@ -2,24 +2,39 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 
 import Transaction from "../components/Transaction";
-
 import { TextMask } from "react-native-masked-text";
-
 import { secundaryColor, lighColor } from "../styles/common.js";
 
-export default class NewCard extends Component {
+import { connect } from "react-redux";
+import { fetchTransactions } from "../store/actions/transactionsActions";
+
+import SInfo from "react-native-sensitive-info";
+import { ApiRequestToken } from "../services/api";
+
+class NewCard extends Component {
   state = {
-    transactions: [],
     loading: false,
     totalTransactionsValue: 0
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const userID = await this.getUserID();
+    const apiToken = await this.requestToken();
+    await this.props.dispatch(fetchTransactions(userID, apiToken));
     this.updateTransactions();
   }
 
+  requestToken = async () => {
+    const token = await ApiRequestToken();
+    return token;
+  };
+
+  getUserID = async () => {
+    const userID = await SInfo.getItem("userID", {});
+    return userID;
+  };
+
   updateTransactions = () => {
-    this.setState({ transactions: this.props.transactions });
     let totalTransactionsValue = 0;
     this.props.transactions.map(transaction => {
       totalTransactionsValue = transaction.transactionType
@@ -30,6 +45,8 @@ export default class NewCard extends Component {
   };
 
   render() {
+    const { error, transactions, loading } = this.props;
+
     return (
       <View style={styles.contentWrapper}>
         <View>
@@ -45,17 +62,16 @@ export default class NewCard extends Component {
           </View>
           <View style={styles.cardBody}>
             <FlatList
-              data={this.state.transactions}
+              data={transactions}
               keyExtractor={transaction => transaction._id}
               renderItem={({ item }) => (
                 <Transaction
                   transaction={item}
-                  refreshList={this.props.refreshList}
                   navigation={this.props.navigation}
                 />
               )}
               onRefresh={this.props.refreshList}
-              refreshing={this.state.loading}
+              refreshing={loading}
               showsVerticalScrollIndicator={false}
             />
           </View>
@@ -106,3 +122,11 @@ const styles = StyleSheet.create({
     fontWeight: "600"
   }
 });
+
+const mapStateToProps = state => ({
+  transactions: state.transactions.transactions,
+  loading: state.transactions.loading,
+  error: state.transactions.error
+});
+
+export default connect(mapStateToProps)(NewCard);

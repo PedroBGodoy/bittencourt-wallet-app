@@ -37,7 +37,7 @@ export default class accouts extends Component {
 
     await this.getUserID();
 
-    await this.requestToken().then(res => this.requestData(res));
+    //await this.requestToken().then(res => this.requestData(res));
 
     this.setState({ loading: false });
   }

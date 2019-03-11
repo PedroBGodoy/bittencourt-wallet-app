@@ -20,7 +20,10 @@
     "react-native-swipeout": "^2.3.6",
     "react-native-swiper": "^1.5.14",
     "react-native-vector-icons": "^6.3.0",
-    "react-navigation": "^3.2.3"
+    "react-navigation": "^3.2.3",
+    "react-redux": "^6.0.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "babel-core": "7.0.0-bridge.0",
