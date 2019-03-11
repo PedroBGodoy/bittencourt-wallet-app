@@ -174,39 +174,6 @@ export default class newTransaction extends Component {
               </TextInput>
             </View>
           </View>
-
-          {/* <TextInput
-            placeholder="Descrição"
-            style={styles.textInput}
-            autoCapitalize="sentences"
-            autoCorrect={true}
-            onChangeText={this.handleDescriptionChange}
-          />
-          <TextInput
-            placeholder="R$00,00"
-            style={styles.textInput}
-            onChangeText={this.handleValueChange}
-            value={this.state.transactionValue}
-            keyboardType="numeric"
-          />
-          <Picker
-            selectedValue={this.state.transactionType}
-            style={styles.picker}
-            onValueChange={(itemValue, itemIndex) =>
-              this.setState({ transactionType: itemValue })
-            }
-          >
-            <Picker.Item label="Depósito" value="true" />
-            <Picker.Item label="Gasto" value="false" />
-          </Picker>
-          <View>
-            <TouchableOpacity
-              style={styles.addTransactionButton}
-              onPress={this.handleAddNewTransaction}
-            >
-              <Text>Adicionar</Text>
-            </TouchableOpacity>
-          </View> */}
         </View>
       </View>
     );
