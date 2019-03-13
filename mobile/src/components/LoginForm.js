@@ -4,7 +4,8 @@ import {
   View,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 
 import { connect } from "react-redux";
@@ -38,46 +39,57 @@ export class LoginForm extends Component {
   };
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>{this.props.error}</Text>
-        <View style={styles.horizontalWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Email"
-            onChangeText={this.handleEmailChange}
-            value={this.state.email}
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-          />
+    if (this.props.loading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" style={styles.activivityIndicator} />
         </View>
-        <View style={styles.horizontalWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Senha"
-            onChangeText={this.handlePasswordChange}
-            value={this.state.password}
-            secureTextEntry={true}
-          />
-        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.errorText}>{this.props.error}</Text>
+          <View style={styles.horizontalWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email"
+              onChangeText={this.handleEmailChange}
+              value={this.state.email}
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+            />
+          </View>
+          <View style={styles.horizontalWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Senha"
+              onChangeText={this.handlePasswordChange}
+              value={this.state.password}
+              secureTextEntry={true}
+            />
+          </View>
 
-        <View style={styles.horizontalWrapper}>
-          <TouchableOpacity style={styles.button} onPress={this.handleLoginBtn}>
-            <Text style={styles.buttonText}>LOGAR</Text>
-          </TouchableOpacity>
+          <View style={styles.horizontalWrapper}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.handleLoginBtn}
+            >
+              <Text style={styles.buttonText}>LOGAR</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.horizontalWrapper}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.handleRegisterButton}
+            >
+              <Text style={styles.buttonText}>CADASTRAR</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.horizontalWrapper}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.handleRegisterButton}
-          >
-            <Text style={styles.buttonText}>CADASTRAR</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
@@ -116,12 +128,16 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: errorColor
+  },
+  activivityIndicator: {
+    paddingTop: 150
   }
 });
 
 const mapStateToProps = state => ({
   error: state.user.error,
-  loged: state.user.loged
+  loged: state.user.loged,
+  loading: state.user.loading
 });
 
 export default connect(mapStateToProps)(LoginForm);

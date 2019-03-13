@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import {
   Text,
-  View,
   StyleSheet,
   StatusBar,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ActivityIndicator
 } from "react-native";
 
 import { statusColor, primaryColor } from "../styles/common";

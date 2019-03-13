@@ -11,14 +11,30 @@ const initialState = {
   email: "",
   accessToken: "",
   loged: false,
-  registering: false
+  registering: false,
+  loading: false
 };
+
+function handleErrorMessage(error) {
+  let errorReturn = "";
+  if (error.response) {
+    if (error.response.status === 400) {
+      errorReturn = error.response.data.error;
+    } else {
+      errorReturn = "Erro desconhecido!";
+    }
+  } else {
+    errorReturn = "Erro desconhecido!";
+  }
+  return errorReturn;
+}
 
 export default function authenticationReducer(state = initialState, action) {
   switch (action.type) {
     case USER_BEGIN:
       return {
-        ...state
+        ...state,
+        loading: true
       };
     case USER_SUCCESS:
       const values = action.payload.user.data;
@@ -27,28 +43,19 @@ export default function authenticationReducer(state = initialState, action) {
         name: values.user.name,
         email: values.user.email,
         accessToken: values.token,
-        loged: true
+        loged: true,
+        loading: false
       };
     case USER_ERROR:
-      const error = action.payload.error;
-      let errorMessage = "";
-      if (error.response) {
-        if (error.response.status === 400) {
-          errorMessage = error.response.data.error;
-        } else {
-          errorMessage = "Erro desconhecido!";
-        }
-      } else {
-        errorMessage = "Erro desconhecido!";
-      }
-
+      let errorMessage = handleErrorMessage(action.payload.error);
       return {
         ...state,
         error: errorMessage,
         name: "",
         email: "",
         accessToken: "",
-        loged: false
+        loged: false,
+        loading: false
       };
 
     case USER_TOGGLE_REGISTER_FORM:
@@ -64,7 +71,8 @@ export default function authenticationReducer(state = initialState, action) {
         loged: false,
         name: "",
         email: "",
-        accessToken: "false"
+        accessToken: "false",
+        loading: false
       };
 
     default:

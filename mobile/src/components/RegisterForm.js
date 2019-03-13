@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  BackHandler
+  BackHandler,
+  ActivivityIndicator
 } from "react-native";
 
 import { connect } from "react-redux";
@@ -70,66 +71,77 @@ export class RegisterForm extends Component {
   };
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>{this.props.error}</Text>
-        <View style={styles.horizontalWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Nome"
-            onChangeText={this.handleNameChange}
-            value={this.state.name}
+    if (this.props.loading) {
+      return (
+        <View style={styles.container}>
+          <ActivivityIndicator
+            size="large"
+            style={styles.activivityIndicator}
           />
         </View>
-        <View style={styles.horizontalWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Email"
-            onChangeText={this.handleEmailChange}
-            value={this.state.email}
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-          />
-        </View>
-        <View style={styles.horizontalWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Senha"
-            onChangeText={this.handlePasswordChange}
-            value={this.state.password}
-            secureTextEntry={true}
-          />
-        </View>
-        <View style={styles.horizontalWrapper}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Confirmar Senha"
-            onChangeText={this.handlePasswordConfirmationChange}
-            value={this.state.passwordConfirmation}
-            secureTextEntry={true}
-          />
-        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.errorText}>{this.props.error}</Text>
+          <View style={styles.horizontalWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Nome"
+              onChangeText={this.handleNameChange}
+              value={this.state.name}
+            />
+          </View>
+          <View style={styles.horizontalWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email"
+              onChangeText={this.handleEmailChange}
+              value={this.state.email}
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+            />
+          </View>
+          <View style={styles.horizontalWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Senha"
+              onChangeText={this.handlePasswordChange}
+              value={this.state.password}
+              secureTextEntry={true}
+            />
+          </View>
+          <View style={styles.horizontalWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Confirmar Senha"
+              onChangeText={this.handlePasswordConfirmationChange}
+              value={this.state.passwordConfirmation}
+              secureTextEntry={true}
+            />
+          </View>
 
-        <View style={styles.horizontalWrapper}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.handleRegisterBtn}
-          >
-            <Text style={styles.buttonText}>CADASTRAR</Text>
-          </TouchableOpacity>
+          <View style={styles.horizontalWrapper}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.handleRegisterBtn}
+            >
+              <Text style={styles.buttonText}>CADASTRAR</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.horizontalWrapper}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.handleBackButton}
+            >
+              <Text style={styles.buttonText}>VOLTAR</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.horizontalWrapper}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.handleBackButton}
-          >
-            <Text style={styles.buttonText}>VOLTAR</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
@@ -169,11 +181,15 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: errorColor
+  },
+  activivityIndicator: {
+    padding: 150
   }
 });
 
 const mapStateToProps = state => ({
-  error: state.user.error
+  error: state.user.error,
+  loading: state.user.loading
 });
 
 export default connect(mapStateToProps)(RegisterForm);
