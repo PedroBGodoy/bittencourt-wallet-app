@@ -1,88 +1,131 @@
-export async function ApiRequestToken() {
-  try {
-    let response = await fetch("https://bittencourt.auth0.com/oauth/token", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body:
-        '{"client_id":"9N2FKDAcGTeeVt5oiWgkpRddwMYf4Iw2","client_secret":"WHmZL3QwmXjiHR_Fu7L0ahVwEJYM9ZwwJdAir19MkPsVehwsdTfBeujSePFgpGYG","audience":"https://walletbittencourt.com/api","grant_type":"client_credentials"}'
-    });
-    let responseJson = await response.json();
-    return responseJson.access_token;
-  } catch (err) {
-    console.log(err);
-  }
-}
+import Config from "react-native-config";
+import axios from "axios";
 
-export async function ApiRequestData(userID, apiToken) {
-  let responseJson = undefined;
+export async function ApiRequestData(accessToken) {
   try {
-    let response = await fetch(
-      `https://mighty-wave-79384.herokuapp.com/transactions/${userID}`,
-      {
-        headers: { authorization: `Bearer ${apiToken}` }
-      }
-    );
-    responseJson = await response.json();
+    const res = await axios(Config.BASE_URL_HEROKU + "/transactions", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      timeout: 3000
+    });
+
+    return res;
   } catch (err) {
-    console.log(err);
     throw err;
-  }
-  if (responseJson !== undefined) {
-    return responseJson;
   }
 }
 
 export async function ApiHandleNewTransaction(
+  accessToken,
   description,
   value,
-  type,
-  user,
-  apiToken
+  type
 ) {
-  await fetch("https://mighty-wave-79384.herokuapp.com/transactions", {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${apiToken}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      transactionDescription: description,
-      transactionValue: value,
-      transactionType: type,
-      user: user
-    })
-  });
+  try {
+    console.log(type);
+    const res = await axios(Config.BASE_URL_HEROKU + "/transactions", {
+      method: "POST",
+      data: JSON.stringify({
+        description: description,
+        value: value,
+        type: type
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      timeout: 3000
+    });
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
 }
 
 export async function ApiHandleUpdateTransaction(
   id,
+  accessToken,
   description,
   value,
-  type,
-  user,
-  apiToken
+  type
 ) {
-  await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${id}`, {
-    method: "PUT",
-    headers: {
-      authorization: `Bearer ${apiToken}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      transactionDescription: description,
-      transactionValue: value,
-      transactionType: type,
-      user: user
-    })
-  });
+  try {
+    const res = await axios(Config.BASE_URL_HEROKU + "/transactions/" + id, {
+      method: "PUT",
+      data: JSON.stringify({
+        description: description,
+        value: value,
+        type: type
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      timeout: 3000
+    });
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
 }
 
-export async function ApiHandleDeleteTransaction(id, apiToken) {
-  await fetch(`https://mighty-wave-79384.herokuapp.com/transactions/${id}`, {
-    method: "DELETE",
-    headers: {
-      authorization: `Bearer ${apiToken}`,
-      "Content-Type": "application/json"
-    }
-  });
+export async function ApiHandleDeleteTransaction(id, accessToken) {
+  try {
+    const res = await axios(Config.BASE_URL_HEROKU + "/transactions/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      timeout: 3000
+    });
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function ApiHandleLogin(email, password) {
+  try {
+    const res = await axios(Config.BASE_URL_HEROKU + "/auth/authenticate", {
+      method: "POST",
+      data: JSON.stringify({
+        email: email,
+        password: password
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      timeout: 3000
+    });
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function ApiHandleRegister(name, email, password) {
+  try {
+    const res = await axios(Config.BASE_URL_HEROKU + "/auth/register", {
+      method: "POST",
+      data: JSON.stringify({
+        name: name,
+        email: email,
+        password: password
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      timeout: 3000
+    });
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
 }

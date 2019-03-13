@@ -8,40 +8,22 @@ import { secundaryColor, lighColor } from "../styles/common.js";
 import { connect } from "react-redux";
 import { fetchTransactions } from "../store/actions/transactionsActions";
 
-import SInfo from "react-native-sensitive-info";
-import { ApiRequestToken } from "../services/api";
-
 class NewCard extends Component {
   state = {
-    loading: false,
-    totalTransactionsValue: 0
+    loading: false
   };
 
   async componentDidMount() {
-    const userID = await this.getUserID();
-    const apiToken = await this.requestToken();
-    await this.props.dispatch(fetchTransactions(userID, apiToken));
-    this.updateTransactions();
+    await this.requestTransactions();
+    // this.props.transactions.foreach(transaction => {
+    //   totalTransactionsValue = transaction.transactionType
+    //     ? totalTransactionsValue + transaction.transactionValue
+    //     : totalTransactionsValue - transaction.transactionValue;
+    // })
   }
 
-  requestToken = async () => {
-    const token = await ApiRequestToken();
-    return token;
-  };
-
-  getUserID = async () => {
-    const userID = await SInfo.getItem("userID", {});
-    return userID;
-  };
-
-  updateTransactions = () => {
-    let totalTransactionsValue = 0;
-    this.props.transactions.map(transaction => {
-      totalTransactionsValue = transaction.transactionType
-        ? totalTransactionsValue + transaction.transactionValue
-        : totalTransactionsValue - transaction.transactionValue;
-    });
-    this.setState({ totalTransactionsValue: totalTransactionsValue });
+  requestTransactions = async () => {
+    await this.props.dispatch(fetchTransactions(this.props.accessToken));
   };
 
   render() {
@@ -56,24 +38,27 @@ class NewCard extends Component {
           <View style={styles.cardHead}>
             <TextMask
               style={styles.cardHeadText}
-              value={this.state.totalTransactionsValue}
+              value={this.props.totalTransactionsValue}
               type={"money"}
             />
           </View>
           <View style={styles.cardBody}>
-            <FlatList
-              data={transactions}
-              keyExtractor={transaction => transaction._id}
-              renderItem={({ item }) => (
-                <Transaction
-                  transaction={item}
-                  navigation={this.props.navigation}
-                />
-              )}
-              onRefresh={this.props.refreshList}
-              refreshing={loading}
-              showsVerticalScrollIndicator={false}
-            />
+            {this.props.transactions && (
+              <FlatList
+                data={transactions}
+                keyExtractor={transaction => transaction._id}
+                renderItem={({ item }) => (
+                  <Transaction
+                    transaction={item}
+                    navigation={this.props.navigation}
+                    refreshList={this.requestTransactions}
+                  />
+                )}
+                onRefresh={this.requestTransactions}
+                refreshing={loading}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -126,7 +111,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   transactions: state.transactions.transactions,
   loading: state.transactions.loading,
-  error: state.transactions.error
+  error: state.transactions.error,
+  accessToken: state.user.accessToken,
+  totalTransactionsValue: state.transactions.totalTransactionsValue
 });
 
 export default connect(mapStateToProps)(NewCard);

@@ -139,7 +139,6 @@ dependencies {
     implementation project(':react-native-restart')
     implementation project(':react-native-device-info')
     implementation project(':react-native-sensitive-info')
-    implementation project(':react-native-auth0')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])

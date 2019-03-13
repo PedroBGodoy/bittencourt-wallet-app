@@ -5,23 +5,15 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
-  BackHandler,
-  Platform
+  BackHandler
 } from "react-native";
 
 import Topbar from "../components/Topbar";
-
-import Auth0 from "react-native-auth0";
-import SInfo from "react-native-sensitive-info";
-
-const auth0 = new Auth0({
-  domain: "bittencourt.auth0.com",
-  clientId: "4U4Qkc8IxtVEL1kc0MDu6LlCgTcmmhXi"
-});
-
 import { primaryColor, statusColor } from "../styles/common.js";
+import { connect } from "react-redux";
+import { logout } from "../store/actions/userActions";
 
-export default class Settings extends Component {
+export class Settings extends Component {
   componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
   }
@@ -40,21 +32,11 @@ export default class Settings extends Component {
   };
 
   goToLogin = () => {
-    this.props.navigation.navigate("Login");
+    this.props.navigation.navigate("Authentication");
   };
 
   handleLogout = () => {
-    SInfo.deleteItem("accessToken", {});
-    SInfo.deleteItem("refreshToken", {});
-    SInfo.deleteItem("userID", {});
-    SInfo.deleteItem("idToken", {});
-
-    if (Platform.OS === "ios") {
-      auth0.webAuth.clearSession().catch(err => {
-        console.log("error clearing session: ", err);
-      });
-    }
-
+    this.props.dispatch(logout());
     this.goToLogin();
   };
 
@@ -97,3 +79,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   }
 });
+
+const mapStateToProps = state => ({});
+
+export default connect(mapStateToProps)(Settings);

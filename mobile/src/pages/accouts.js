@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import {
-  Text,
   View,
   StyleSheet,
   StatusBar,
-  FlatList,
   ActivityIndicator,
   AsyncStorage
 } from "react-native";
@@ -12,9 +10,6 @@ import {
 import SInfo from "react-native-sensitive-info";
 
 import Topbar from "../components/Topbar";
-import Card from "../components/Card";
-import Transaction from "../components/Transaction";
-import AddTransactionButton from "../components/AddTransactionButton";
 import NewCard from "../components/NewCard.js";
 
 import { ApiRequestToken, ApiRequestData } from "../services/api";
@@ -32,40 +27,8 @@ export default class accouts extends Component {
   };
 
   async componentDidMount() {
-    const name = await AsyncStorage.getItem("@WalletApp:name");
-    this.setState({ name: name });
-
-    await this.getUserID();
-
-    //await this.requestToken().then(res => this.requestData(res));
-
     this.setState({ loading: false });
   }
-
-  getUserID = async () => {
-    const userID = await SInfo.getItem("userID", {});
-    this.setState({ userID: userID });
-  };
-
-  refreshList = () => {
-    this.requestData();
-  };
-
-  requestToken = async () => {
-    const token = await ApiRequestToken();
-    this.setState({ apiToken: token });
-    await SInfo.setItem("apiToken", token, {});
-  };
-
-  requestData = async () => {
-    this.setState({ isFetching: true });
-    const transactions = await ApiRequestData(
-      this.state.userID,
-      this.state.apiToken
-    );
-    this.setState({ transactions: transactions });
-    this.setState({ isFetching: false });
-  };
 
   handleSettings = () => {
     this.props.navigation.navigate("Settings");
@@ -111,7 +74,6 @@ export default class accouts extends Component {
           <NewCard
             transactions={this.state.transactions}
             navigation={this.props.navigation}
-            refreshList={this.refreshList}
           />
         </View>
       );

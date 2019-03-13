@@ -12,22 +12,20 @@ import {
 import SInfo from "react-native-sensitive-info";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { TextInputMask } from "react-native-masked-text";
-
+import { updateTransaction } from "../store/actions/transactionsActions";
+import { connect } from "react-redux";
 import Topbar from "../components/Topbar";
-import { ApiHandleUpdateTransaction } from "../services/api";
 
 import { primaryColor, statusColor, lighColor } from "../styles/common.js";
 
-export default class EditTransaction extends Component {
+export class EditTransaction extends Component {
   constructor(props) {
     super(props);
     this.state = {
       transactionDescription: "NOME DA TRANSAÇÃO",
       transactionValue: "0",
       transactionType: "true",
-      transactionID: "",
-      user: "",
-      apiToken: ""
+      transactionID: ""
     };
     this.rawValueRef;
   }
@@ -59,15 +57,19 @@ export default class EditTransaction extends Component {
     return true;
   };
 
-  handleEditTransaction = () => {
-    ApiHandleUpdateTransaction(
-      this.state.transactionID,
-      this.state.transactionDescription,
-      this.rawValueRef.getRawValue(),
-      this.state.transactionType,
-      this.state.user,
-      this.state.apiToken
-    );
+  handleEditTransaction = async () => {
+    if (this.checkInput()) {
+      await this.props.dispatch(
+        updateTransaction(
+          this.props.accessToken,
+          this.state.transactionID,
+          this.state.transactionDescription,
+          this.rawValueRef.getRawValue(),
+          this.state.transactionType
+        )
+      );
+    }
+
     this.goBack();
   };
 
@@ -264,3 +266,9 @@ const styles = StyleSheet.create({
     paddingTop: 15
   }
 });
+
+const mapStateToProps = state => ({
+  accessToken: state.user.accessToken
+});
+
+export default connect(mapStateToProps)(EditTransaction);

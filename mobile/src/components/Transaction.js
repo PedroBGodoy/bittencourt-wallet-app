@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
 import Swipeout from "react-native-swipeout";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import SInfo from "react-native-sensitive-info";
+import { connect } from "react-redux";
 
 import { ApiHandleDeleteTransaction } from "../services/api";
 
 import { lighColor } from "../styles/common.js";
 
 import { TextMask } from "react-native-masked-text";
+import { deleteTransaction } from "../store/actions/transactionsActions";
 
-export default class Transaction extends Component {
+export class Transaction extends Component {
   render() {
     const { transaction } = this.props;
     const day = parseDate(transaction.madeAt);
@@ -27,7 +27,7 @@ export default class Transaction extends Component {
 
     async function handleDeleteButtonPress(id) {
       await this.handleDeleteTransaction(id);
-      this.refreshList();
+      //this.refreshList();
     }
 
     function handleEditButtonPress(data) {
@@ -35,15 +35,14 @@ export default class Transaction extends Component {
     }
 
     handleDeleteTransaction = async id => {
-      const apiToken = await SInfo.getItem("apiToken", {});
-      await ApiHandleDeleteTransaction(id, apiToken);
+      await this.props.dispatch(deleteTransaction(this.props.accessToken, id));
     };
 
     handleEditButton = data => {
       this.props.navigation.navigate("EditTransaction", {
-        description: data.transactionDescription,
-        value: data.transactionValue.toString(),
-        type: data.transactionType,
+        description: data.description,
+        value: data.value.toString(),
+        type: data.type,
         id: data._id
       });
     };
@@ -79,34 +78,20 @@ export default class Transaction extends Component {
         <View style={styles.container}>
           <View style={styles.content}>
             <View style={styles.centerBox}>
-              <Text style={styles.description}>
-                {transaction.transactionDescription}
-              </Text>
+              <Text style={styles.description}>{transaction.description}</Text>
               <Text style={styles.date}>{day}</Text>
             </View>
 
-            {!transaction.transactionType && (
-              <View style={styles.rightBox}>
-                <View style={styles.icon}>
-                  <Icon name="minus" size={10} color="#C52929" />
-                </View>
-                <TextMask
-                  style={styles.valueNegative}
-                  type={"money"}
-                  value={transaction.transactionValue}
-                />
-              </View>
-            )}
-            {transaction.transactionType && (
-              <View style={styles.rightBox}>
-                <View style={styles.icon} />
-                <TextMask
-                  style={styles.valuePositive}
-                  type={"money"}
-                  value={transaction.transactionValue}
-                />
-              </View>
-            )}
+            <View style={styles.rightBox}>
+              <View style={styles.icon} />
+              <TextMask
+                style={
+                  transaction.type ? styles.valuePositive : styles.valueNegative
+                }
+                type={"money"}
+                value={transaction.value}
+              />
+            </View>
           </View>
         </View>
       </Swipeout>
@@ -170,3 +155,9 @@ const styles = StyleSheet.create({
     paddingRight: 3
   }
 });
+
+const mapStateToProps = state => ({
+  accessToken: state.user.accessToken
+});
+
+export default connect(mapStateToProps)(Transaction);

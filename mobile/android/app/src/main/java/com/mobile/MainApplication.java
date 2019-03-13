@@ -7,7 +7,6 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
-import com.auth0.react.A0Auth0Package;
 
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -35,7 +34,6 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeRestartPackage(),
             new RNDeviceInfo(),
             new RNSensitiveInfoPackage(),
-            new A0Auth0Package(),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage()
       );
