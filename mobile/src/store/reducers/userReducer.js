@@ -15,20 +15,6 @@ const initialState = {
   loading: false
 };
 
-function handleErrorMessage(error) {
-  let errorReturn = "";
-  if (error.response) {
-    if (error.response.status === 400) {
-      errorReturn = error.response.data.error;
-    } else {
-      errorReturn = "Erro desconhecido!";
-    }
-  } else {
-    errorReturn = "Erro desconhecido!";
-  }
-  return errorReturn;
-}
-
 export default function authenticationReducer(state = initialState, action) {
   switch (action.type) {
     case USER_BEGIN:
@@ -37,7 +23,7 @@ export default function authenticationReducer(state = initialState, action) {
         loading: true
       };
     case USER_SUCCESS:
-      const values = action.payload.user.data;
+      const values = action.payload.user;
       return {
         ...state,
         name: values.user.name,
@@ -47,7 +33,7 @@ export default function authenticationReducer(state = initialState, action) {
         loading: false
       };
     case USER_ERROR:
-      let errorMessage = handleErrorMessage(action.payload.error);
+      let errorMessage = action.payload.error;
       return {
         ...state,
         error: errorMessage,

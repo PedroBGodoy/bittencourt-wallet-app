@@ -10,13 +10,14 @@ import {
   UPDATE_TRANSACTIONS_ERROR,
   ADD_TRANSACTIONS_BEGIN,
   ADD_TRANSACTIONS_SUCCESS,
-  ADD_TRANSACTIONS_ERROR
+  ADD_TRANSACTIONS_ERROR,
+  CLEAR_TRANSACTIONS
 } from "../actions/transactionsActions";
 
 const initialState = {
   transactions: [],
   loading: false,
-  error: null,
+  error: "",
   totalTransactionsValue: 0
 };
 
@@ -34,10 +35,26 @@ function removeTransactionFromArray(transactionID, transactions) {
   });
 }
 
+function handleErrorMessage(error) {
+  let errorReturn = "";
+  if (error.response) {
+    if (error.response.status === 400) {
+      errorReturn = error.response.data.error;
+    } else {
+      errorReturn = "Erro desconhecido!";
+    }
+  } else {
+    errorReturn = "Erro desconhecido!";
+  }
+  console.log(error);
+  return errorReturn;
+}
+
 export default function transactionsReducer(state = initialState, action) {
   let errorMessage = "";
   let totalTransactionsValue = 0;
   let transactions = [];
+
   switch (action.type) {
     case FETCH_TRANSACTIONS_BEGIN:
       return {
@@ -55,20 +72,7 @@ export default function transactionsReducer(state = initialState, action) {
         totalTransactionsValue: totalTransactionsValue
       };
     case FETCH_TRANSACTIONS_ERROR:
-      const errorFetch = action.payload.error;
-      if (errorFetch.response) {
-        if (
-          errorFetch.response.status === 400 ||
-          errorADD.response.status === 401
-        ) {
-          errorMessage = errorFetch.response.data.error;
-        } else {
-          errorMessage = "Erro desconhecido!";
-        }
-      } else {
-        errorMessage = "Erro desconhecido!";
-      }
-      console.log(errorMessage);
+      errorMessage = handleErrorMessage(action.payload.error);
       return {
         ...state,
         loading: false,
@@ -95,20 +99,8 @@ export default function transactionsReducer(state = initialState, action) {
         totalTransactionsValue: totalTransactionsValue
       };
     case DELETE_TRANSACTIONS_ERROR:
-      const errorDelete = action.payload.error;
-      if (errorDelete.response) {
-        if (
-          errorDelete.response.status === 400 ||
-          errorADD.response.status === 401
-        ) {
-          errorMessage = errorDelete.response.data.error;
-        } else {
-          errorMessage = "Erro desconhecido!";
-        }
-      } else {
-        errorMessage = "Erro desconhecido!";
-      }
-      console.log(errorMessage);
+      errorMessage = handleErrorMessage(action.payload.error);
+
       return {
         ...state,
         error: errorMessage,
@@ -124,29 +116,11 @@ export default function transactionsReducer(state = initialState, action) {
     case UPDATE_TRANSACTIONS_SUCCESS:
       return {
         ...state,
-        // transactions: state.transactions.map(transaction => {
-        //   transaction =
-        //     transaction._id === action.payload.transaction.data._id
-        //       ? action.payload.transaction.data
-        //       : transaction;
-        // }),
         loading: false
       };
     case UPDATE_TRANSACTIONS_ERROR:
-      const errorUpdate = action.payload.error;
-      if (errorUpdate.response) {
-        if (
-          errorUpdate.response.status === 400 ||
-          errorADD.response.status === 401
-        ) {
-          errorMessage = errorUpdate.response.data.error;
-        } else {
-          errorMessage = "Erro desconhecido!";
-        }
-      } else {
-        errorMessage = "Erro desconhecido!";
-      }
-      console.log(errorMessage);
+      errorMessage = handleErrorMessage(action.payload.error);
+
       return {
         ...state,
         error: errorMessage,
@@ -166,25 +140,21 @@ export default function transactionsReducer(state = initialState, action) {
         loading: false
       };
     case ADD_TRANSACTIONS_ERROR:
-      console.log("ERROR ADD TRANSACION");
-      const errorADD = action.payload.error;
-      if (errorADD.response) {
-        if (
-          errorADD.response.status === 400 ||
-          errorADD.response.status === 401
-        ) {
-          errorMessage = errorADD.response.data.error;
-        } else {
-          errorMessage = "Erro desconhecido!";
-        }
-      } else {
-        errorMessage = "Erro desconhecido!";
-      }
-      console.log(errorADD);
+      errorMessage = handleErrorMessage(action.payload.error);
+
       return {
         ...state,
         error: errorMessage,
         loading: false
+      };
+
+    case CLEAR_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: [],
+        loading: false,
+        error: "",
+        totalTransactionsValue: 0
       };
 
     default:

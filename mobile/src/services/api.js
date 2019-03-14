@@ -91,19 +91,24 @@ export async function ApiHandleDeleteTransaction(id, accessToken) {
 
 export async function ApiHandleLogin(email, password) {
   try {
-    const res = await axios(Config.BASE_URL_HEROKU + "/auth/authenticate", {
+    const res = await fetch(Config.BASE_URL_HEROKU + "/auth/authenticate", {
       method: "POST",
-      data: JSON.stringify({
+      body: JSON.stringify({
         email: email,
         password: password
       }),
       headers: {
         "Content-Type": "application/json"
-      },
-      timeout: 3000
+      }
     });
 
-    return res;
+    const resJson = await res.json();
+
+    if (res.status !== 200) {
+      throw resJson.error;
+    } else {
+      return resJson;
+    }
   } catch (err) {
     throw err;
   }
@@ -111,20 +116,23 @@ export async function ApiHandleLogin(email, password) {
 
 export async function ApiHandleRegister(name, email, password) {
   try {
-    const res = await axios(Config.BASE_URL_HEROKU + "/auth/register", {
+    const res = await fetch(Config.BASE_URL_HEROKU + "/auth/register", {
       method: "POST",
-      data: JSON.stringify({
+      body: JSON.stringify({
         name: name,
         email: email,
         password: password
       }),
       headers: {
         "Content-Type": "application/json"
-      },
-      timeout: 3000
+      }
     });
 
-    return res;
+    const resJson = await res.json();
+
+    console.log(resJson);
+
+    return resJson;
   } catch (err) {
     throw err;
   }

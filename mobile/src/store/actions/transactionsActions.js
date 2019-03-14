@@ -14,6 +14,8 @@ export const ADD_TRANSACTIONS_BEGIN = "ADD_TRANSACTIONS_BEGIN";
 export const ADD_TRANSACTIONS_SUCCESS = "ADD_TRANSACTIONS_SUCCESS";
 export const ADD_TRANSACTIONS_ERROR = "ADD_TRANSACTIONS_ERROR";
 
+export const CLEAR_TRANSACTIONS = "CLEAR_TRANSACTIONS";
+
 import {
   ApiRequestData,
   ApiHandleDeleteTransaction,
@@ -80,6 +82,12 @@ export function addTransaction(accessToken, description, value, type) {
   };
 }
 
+export function clearTransactions() {
+  return dispatch => {
+    dispatch(cleatTransactionsDispatcher());
+  };
+}
+
 export const fetchTransactionsBegin = () => ({
   type: FETCH_TRANSACTIONS_BEGIN
 });
@@ -127,4 +135,8 @@ export const addTransactionSuccess = transaction => ({
 export const addTransactionError = error => ({
   type: ADD_TRANSACTIONS_ERROR,
   payload: { error }
+});
+
+export const cleatTransactionsDispatcher = () => ({
+  type: CLEAR_TRANSACTIONS
 });
