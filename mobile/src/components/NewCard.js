@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, FlatList } from "react-native";
 
 import Transaction from "../components/Transaction";
 import { TextMask } from "react-native-masked-text";
-import { secundaryColor, lighColor } from "../styles/common.js";
+import { secondaryColor, lighColor } from "../styles/common.js";
 
 import { connect } from "react-redux";
 import { fetchTransactions } from "../store/actions/transactionsActions";
@@ -32,7 +32,7 @@ class NewCard extends Component {
     return (
       <View style={styles.contentWrapper}>
         <View>
-          <Text style={styles.monthSelector}>MÊS</Text>
+          <Text style={styles.monthSelector}>MAR</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardHead}>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   monthSelector: {
     textAlign: "center",
-    color: secundaryColor,
+    color: secondaryColor,
     fontSize: 15,
     marginBottom: 10,
     fontWeight: "500"
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   cardHead: {
     flex: 0.13,
-    backgroundColor: secundaryColor,
+    backgroundColor: secondaryColor,
     alignItems: "center",
     justifyContent: "center",
     elevation: 8,

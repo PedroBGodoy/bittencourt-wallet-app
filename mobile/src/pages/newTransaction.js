@@ -45,7 +45,7 @@ export class newTransaction extends Component {
   };
 
   goBack = async () => {
-    this.props.navigation.navigate("Accounts");
+    this.props.navigation.navigate("Main");
   };
 
   handleAddNewTransaction = async () => {

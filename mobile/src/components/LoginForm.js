@@ -22,7 +22,7 @@ export class LoginForm extends Component {
   handleLoginBtn = async () => {
     await this.props.dispatch(login(this.state.email, this.state.password));
     if (this.props.loged) {
-      this.props.navigation.navigate("Accounts");
+      this.props.navigation.navigate("Main");
     }
   };
 

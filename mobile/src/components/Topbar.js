@@ -6,10 +6,6 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { lighColor } from "../styles/common.js";
 
 export default class Topbar extends Component {
-  goBack = () => {
-    this.props.navigation.navigate("Accounts");
-  };
-
   render() {
     const { topbar } = this.props;
 

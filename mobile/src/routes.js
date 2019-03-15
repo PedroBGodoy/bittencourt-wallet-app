@@ -1,6 +1,6 @@
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 
-import Accounts from "./pages/Accouts";
+import Main from "./pages/Main";
 import NewTransaction from "./pages/NewTransaction";
 //import Login from "./pages/Login";
 import Settings from "./pages/Settings";
@@ -10,7 +10,7 @@ import Authentication from "./pages/Authentication";
 const Routes = createAppContainer(
   createSwitchNavigator({
     Authentication,
-    Accounts,
+    Main,
     NewTransaction,
     Settings,
     EditTransaction

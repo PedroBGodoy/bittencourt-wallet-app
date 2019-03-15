@@ -12,6 +12,7 @@ import Topbar from "../components/Topbar";
 import { primaryColor, statusColor } from "../styles/common.js";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/userActions";
+import { clearTransactions } from "../store/actions/transactionsActions";
 
 export class Settings extends Component {
   componentDidMount() {
@@ -28,7 +29,7 @@ export class Settings extends Component {
   };
 
   goBack = () => {
-    this.props.navigation.navigate("Accounts");
+    this.props.navigation.navigate("Main");
   };
 
   goToLogin = () => {
@@ -37,6 +38,7 @@ export class Settings extends Component {
 
   handleLogout = () => {
     this.props.dispatch(logout());
+    this.props.dispatch(clearTransactions());
     this.goToLogin();
   };
 

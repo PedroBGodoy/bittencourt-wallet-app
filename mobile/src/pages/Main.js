@@ -1,34 +1,14 @@
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  StatusBar,
-  ActivityIndicator,
-  AsyncStorage
-} from "react-native";
-
-import SInfo from "react-native-sensitive-info";
+import { View, StyleSheet, StatusBar, ActivityIndicator } from "react-native";
 
 import Topbar from "../components/Topbar";
 import NewCard from "../components/NewCard.js";
-
-import { ApiRequestToken, ApiRequestData } from "../services/api";
-
 import { primaryColor, statusColor } from "../styles/common.js";
 
-export default class accouts extends Component {
+export default class Main extends Component {
   state = {
-    transactions: [],
-    name: "",
-    userID: "",
-    isFetching: false,
-    loading: true,
-    apiToken: ""
+    loading: false
   };
-
-  async componentDidMount() {
-    this.setState({ loading: false });
-  }
 
   handleSettings = () => {
     this.props.navigation.navigate("Settings");

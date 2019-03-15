@@ -101,7 +101,7 @@ export class EditTransaction extends Component {
   };
 
   goBack = async () => {
-    this.props.navigation.navigate("Accounts");
+    this.props.navigation.navigate("Main");
   };
 
   render() {
