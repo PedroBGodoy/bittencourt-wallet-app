@@ -130,9 +130,11 @@ export async function ApiHandleRegister(name, email, password) {
 
     const resJson = await res.json();
 
-    console.log(resJson);
-
-    return resJson;
+    if (res.status !== 200) {
+      throw resJson.error;
+    } else {
+      return resJson;
+    }
   } catch (err) {
     throw err;
   }

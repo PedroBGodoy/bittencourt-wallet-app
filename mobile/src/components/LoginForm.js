@@ -13,16 +13,45 @@ import { connect } from "react-redux";
 import { darkBlue, lighColor, errorColor } from "../styles/common";
 import { login, registerFormToggle } from "../store/actions/userActions";
 
+function validateEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
 export class LoginForm extends Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    error: ""
   };
 
   handleLoginBtn = async () => {
-    await this.props.dispatch(login(this.state.email, this.state.password));
-    if (this.props.loged) {
-      this.props.navigation.navigate("Main");
+    if (!this.validateInput()) {
+      await this.props.dispatch(login(this.state.email, this.state.password));
+      if (this.props.loged) {
+        this.props.navigation.navigate("Main");
+      }
+    } else {
+      this.setState({ error: this.validateInput() });
+    }
+  };
+
+  validateInput = () => {
+    const { email, password } = this.state;
+    if (email.trim() === "") {
+      return "Por favor preencha seu email!";
+    }
+
+    if (!validateEmail(email)) {
+      return "Email inválido!";
+    }
+
+    if (password.trim() === "") {
+      return "Por favor preencha sua senha!";
+    }
+
+    if (password.trim().length < 5) {
+      return "Sua senha deve conter no mínimo 5 dígitos!";
     }
   };
 
@@ -48,7 +77,9 @@ export class LoginForm extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Text style={styles.errorText}>{this.props.error}</Text>
+          <Text style={styles.errorText}>
+            {this.props.error || this.state.error}
+          </Text>
           <View style={styles.horizontalWrapper}>
             <TextInput
               style={styles.textInput}

@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   BackHandler,
-  ActivivityIndicator
+  ActivityIndicator
 } from "react-native";
 
 import { connect } from "react-redux";
@@ -19,12 +19,18 @@ import {
 } from "../styles/common";
 import { register, registerFormToggle } from "../store/actions/userActions";
 
+function validateEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
 export class RegisterForm extends Component {
   state = {
     name: "",
     email: "",
     password: "",
-    passwordConfirmation: ""
+    passwordConfirmation: "",
+    error: ""
   };
 
   componentDidMount() {
@@ -36,10 +42,15 @@ export class RegisterForm extends Component {
   }
 
   handleRegisterBtn = async () => {
-    if (this.checkInput()) {
+    if (!this.validateInput()) {
       await this.props.dispatch(
         register(this.state.name, this.state.email, this.state.password)
       );
+      if (this.props.loged) {
+        this.props.navigation.navigate("Main");
+      }
+    } else {
+      this.setState({ error: this.validateInput() });
     }
   };
 
@@ -48,9 +59,35 @@ export class RegisterForm extends Component {
     return true;
   };
 
-  checkInput = () => {
-    if (this.state.password === this.state.passwordConfirmation) {
-      return true;
+  validateInput = () => {
+    const { email, password, passwordConfirmation, name } = this.state;
+
+    if (name.trim() === "") {
+      return "Por favor preencha seu nome!";
+    }
+
+    if (name.trim().length < 3) {
+      return "Seu nome deve conter no mínimo 3 letras!";
+    }
+
+    if (email.trim() === "") {
+      return "Por favor preencha seu email!";
+    }
+
+    if (!validateEmail(email)) {
+      return "Email inválido!";
+    }
+
+    if (password.trim() === "") {
+      return "Por favor preencha sua senha!";
+    }
+
+    if (password.trim().length < 5) {
+      return "Sua senha deve conter no mínimo 5 dígitos!";
+    }
+
+    if (password !== passwordConfirmation) {
+      return "Sua senha e confirmação são diferentes!";
     }
   };
 
@@ -74,22 +111,22 @@ export class RegisterForm extends Component {
     if (this.props.loading) {
       return (
         <View style={styles.container}>
-          <ActivivityIndicator
-            size="large"
-            style={styles.activivityIndicator}
-          />
+          <ActivityIndicator size="large" style={styles.activityIndicator} />
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Text style={styles.errorText}>{this.props.error}</Text>
+          <Text style={styles.errorText}>
+            {this.props.error || this.state.error}
+          </Text>
           <View style={styles.horizontalWrapper}>
             <TextInput
               style={styles.textInput}
               placeholder="Nome"
               onChangeText={this.handleNameChange}
               value={this.state.name}
+              maxLength={16}
             />
           </View>
           <View style={styles.horizontalWrapper}>
@@ -111,6 +148,7 @@ export class RegisterForm extends Component {
               onChangeText={this.handlePasswordChange}
               value={this.state.password}
               secureTextEntry={true}
+              maxLength={16}
             />
           </View>
           <View style={styles.horizontalWrapper}>
@@ -120,6 +158,7 @@ export class RegisterForm extends Component {
               onChangeText={this.handlePasswordConfirmationChange}
               value={this.state.passwordConfirmation}
               secureTextEntry={true}
+              maxLength={16}
             />
           </View>
 
@@ -182,14 +221,15 @@ const styles = StyleSheet.create({
   errorText: {
     color: errorColor
   },
-  activivityIndicator: {
+  activityIndicator: {
     padding: 150
   }
 });
 
 const mapStateToProps = state => ({
   error: state.user.error,
-  loading: state.user.loading
+  loading: state.user.loading,
+  loged: state.user.loged
 });
 
 export default connect(mapStateToProps)(RegisterForm);

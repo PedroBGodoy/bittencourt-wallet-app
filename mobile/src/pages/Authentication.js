@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  Text,
-  StyleSheet,
-  StatusBar,
-  KeyboardAvoidingView,
-  ActivityIndicator
-} from "react-native";
+import { Text, StyleSheet, StatusBar, View } from "react-native";
 
 import { statusColor, primaryColor } from "../styles/common";
 
@@ -23,15 +17,17 @@ export class Authentication extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.container} behavior="padding">
         <StatusBar backgroundColor={statusColor} />
 
         <Text style={styles.title}>WalletAPP</Text>
 
-        {(!this.props.registering && (
+        {this.props.registering ? (
+          <RegisterForm navigation={this.props.navigation} />
+        ) : (
           <LoginForm navigation={this.props.navigation} />
-        )) || <RegisterForm navigation={this.props.navigation} />}
-      </KeyboardAvoidingView>
+        )}
+      </View>
     );
   }
 }
