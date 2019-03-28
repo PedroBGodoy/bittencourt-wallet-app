@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 
 import Transaction from "../components/Transaction";
-import { TextMask } from "react-native-masked-text";
 import { secondaryColor, lighColor } from "../styles/common.js";
 
 import { connect } from "react-redux";
@@ -15,11 +14,6 @@ class NewCard extends Component {
 
   async componentDidMount() {
     await this.requestTransactions();
-    // this.props.transactions.foreach(transaction => {
-    //   totalTransactionsValue = transaction.transactionType
-    //     ? totalTransactionsValue + transaction.transactionValue
-    //     : totalTransactionsValue - transaction.transactionValue;
-    // })
   }
 
   requestTransactions = async () => {
@@ -27,7 +21,7 @@ class NewCard extends Component {
   };
 
   render() {
-    const { error, transactions, loading } = this.props;
+    const { transactions, loading } = this.props;
 
     return (
       <View style={styles.contentWrapper}>
@@ -36,11 +30,9 @@ class NewCard extends Component {
         </View>
         <View style={styles.card}>
           <View style={styles.cardHead}>
-            <TextMask
-              style={styles.cardHeadText}
-              value={this.props.totalTransactionsValue}
-              type={"money"}
-            />
+            <Text style={styles.cardHeadText}>
+              {this.props.totalTransactionsValue}
+            </Text>
           </View>
           <View style={styles.cardBody}>
             {this.props.transactions && (

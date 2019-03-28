@@ -42,10 +42,14 @@ export class EditTransaction extends Component {
 
     await this.setState({
       transactionDescription: navigation.getParam("description"),
-      transactionValue: navigation.getParam("value"),
+      transactionValue: parseFloat(navigation.getParam("value"))
+        .toFixed(2)
+        .toString(),
       transactionType: navigation.getParam("type"),
       transactionID: navigation.getParam("id")
     });
+
+    console.log(this.state.transactionValue);
   }
 
   componentWillUnmount() {

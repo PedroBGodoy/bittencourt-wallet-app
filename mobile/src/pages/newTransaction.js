@@ -11,10 +11,10 @@ import {
 } from "react-native";
 
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { TextInputMask } from "react-native-masked-text";
 import { connect } from "react-redux";
 import Topbar from "../components/Topbar";
 import { addTransaction } from "../store/actions/transactionsActions";
+import { TextInputMask } from "react-native-masked-text";
 
 import { primaryColor, statusColor, lighColor } from "../styles/common.js";
 
@@ -22,13 +22,15 @@ export class newTransaction extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      transactionDescription: "NOME DA TRANSAÇÃO",
-      transactionValue: "0",
+      transactionDescription: "",
+      transactionValue: 0,
       transactionType: "true",
       user: "",
-      apiToken: ""
+      apiToken: "",
+      showValue: "R$00,00"
     };
-    this.rawValueRef;
+
+    this.rawValueRef = undefined;
   }
 
   componentDidMount() {
@@ -64,11 +66,6 @@ export class newTransaction extends Component {
   };
 
   checkInput = () => {
-    if (this.state.transactionDescription === "NOME DA TRANSAÇÃO") {
-      Alert.alert("Alerta", "Por favor altere o nome da transação");
-      return false;
-    }
-
     if (this.state.transactionDescription.trim() === "") {
       Alert.alert("Alerta", "Por favor coloque um nome na transação");
       return false;
@@ -84,10 +81,6 @@ export class newTransaction extends Component {
 
   handleDescriptionChange = text => {
     this.setState({ transactionDescription: text });
-  };
-
-  handleValueChange = text => {
-    this.setState({ transactionValue: text });
   };
 
   handleBtnGanho = () => {
@@ -147,10 +140,14 @@ export class newTransaction extends Component {
               </View>
               <View style={styles.bodyTextWrapper}>
                 <TextInputMask
-                  type={"money"}
-                  value={this.state.transactionValue}
-                  onChangeText={this.handleValueChange}
                   style={styles.bodyText}
+                  type={"money"}
+                  value={this.state.showValue}
+                  onChangeText={text => {
+                    this.setState({
+                      showValue: text
+                    });
+                  }}
                   ref={ref => (this.rawValueRef = ref)}
                 />
               </View>
@@ -164,6 +161,8 @@ export class newTransaction extends Component {
               <TextInput
                 style={styles.footerText}
                 onChangeText={this.handleDescriptionChange}
+                placeholder="NOME DA TRANSAÇÃO"
+                placeholderTextColor="#FFF"
               >
                 {this.state.transactionDescription}
               </TextInput>

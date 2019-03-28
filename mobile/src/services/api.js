@@ -24,7 +24,6 @@ export async function ApiHandleNewTransaction(
   type
 ) {
   try {
-    console.log(type);
     const res = await axios(Config.BASE_URL_HEROKU + "/transactions", {
       method: "POST",
       data: JSON.stringify({

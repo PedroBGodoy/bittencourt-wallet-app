@@ -29,6 +29,18 @@ function calculateTotalTransactionsValue(transactions) {
   return res;
 }
 
+function formatTransactionsValue(value) {
+  let prefix = "R$";
+  let signal = value < 0 ? "-" : "";
+  let valueReturn = Math.abs(Math.floor(value));
+  let decimals = value
+    .toFixed(2)
+    .toString()
+    .split(".")[1];
+  decimals = decimals === undefined ? "00" : decimals;
+  return signal + prefix + valueReturn + "." + decimals;
+}
+
 function removeTransactionFromArray(transactionID, transactions) {
   return transactions.filter(transaction => {
     return transaction._id !== transactionID;
@@ -65,6 +77,7 @@ export default function transactionsReducer(state = initialState, action) {
     case FETCH_TRANSACTIONS_SUCCESS:
       transactions = action.payload.transactions.data;
       totalTransactionsValue = calculateTotalTransactionsValue(transactions);
+      totalTransactionsValue = formatTransactionsValue(totalTransactionsValue);
       return {
         ...state,
         loading: false,
@@ -92,6 +105,7 @@ export default function transactionsReducer(state = initialState, action) {
         state.transactions
       );
       totalTransactionsValue = calculateTotalTransactionsValue(transactions);
+      totalTransactionsValue = formatTransactionsValue(totalTransactionsValue);
       return {
         ...state,
         transactions: transactions,
