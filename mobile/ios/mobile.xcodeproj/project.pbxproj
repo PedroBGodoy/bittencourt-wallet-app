@@ -63,6 +63,8 @@
 		DCDB60C3C76546AC8F2EF1CC /* libRCTRestart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9CBA4F447B45D792BC80BD /* libRCTRestart.a */; };
 		DCA3BFAA293D43578AA527AF /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD130523CFC34A48B9EC7FCF /* libReactNativeConfig.a */; };
 		1ECD58A971C04DBA9F99B1C7 /* libReactNativeConfig-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F0CEB1D77274EA097F22F14 /* libReactNativeConfig-tvOS.a */; };
+		3FDEC73A3B9848EA86AC0E22 /* Caveat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DCDE099DE934E0EA1D9DD81 /* Caveat-Bold.ttf */; };
+		DC3CB85B79F549B8862AB91F /* Caveat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB70EB1703F54DE0A0FDE4B1 /* Caveat-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -400,6 +402,8 @@
 		CF1ADB8494E94FD1B55F06ED /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeConfig.xcodeproj"; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		FD130523CFC34A48B9EC7FCF /* libReactNativeConfig.a */ = {isa = PBXFileReference; name = "libReactNativeConfig.a"; path = "libReactNativeConfig.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		2F0CEB1D77274EA097F22F14 /* libReactNativeConfig-tvOS.a */ = {isa = PBXFileReference; name = "libReactNativeConfig-tvOS.a"; path = "libReactNativeConfig-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		6DCDE099DE934E0EA1D9DD81 /* Caveat-Bold.ttf */ = {isa = PBXFileReference; name = "Caveat-Bold.ttf"; path = "../assets/fonts/Caveat-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DB70EB1703F54DE0A0FDE4B1 /* Caveat-Regular.ttf */ = {isa = PBXFileReference; name = "Caveat-Regular.ttf"; path = "../assets/fonts/Caveat-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -698,6 +702,8 @@
 				A6C49F8498164FF8971FD796 /* Octicons.ttf */,
 				4AA21696BD144718BB0D0E1B /* SimpleLineIcons.ttf */,
 				A9779752F13F403AB1A22BB3 /* Zocial.ttf */,
+				6DCDE099DE934E0EA1D9DD81 /* Caveat-Bold.ttf */,
+				DB70EB1703F54DE0A0FDE4B1 /* Caveat-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1164,6 +1170,8 @@
 				C0B3EE3CE0AA4E04A19C23E2 /* Octicons.ttf in Resources */,
 				FF549DCE0A2A4BB9ACF098B5 /* SimpleLineIcons.ttf in Resources */,
 				AD36B4EB698E43429730DE55 /* Zocial.ttf in Resources */,
+				3FDEC73A3B9848EA86AC0E22 /* Caveat-Bold.ttf in Resources */,
+				DC3CB85B79F549B8862AB91F /* Caveat-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

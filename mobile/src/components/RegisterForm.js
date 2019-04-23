@@ -6,16 +6,17 @@ import {
   TextInput,
   TouchableOpacity,
   BackHandler,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from "react-native";
 
 import { connect } from "react-redux";
 
 import {
-  primaryColor,
-  darkBlue,
-  lighColor,
-  errorColor
+  borderColor,
+  errorColor,
+  darkColor,
+  secondaryColor
 } from "../styles/common";
 import { register, registerFormToggle } from "../store/actions/userActions";
 
@@ -116,7 +117,12 @@ export class RegisterForm extends Component {
       );
     } else {
       return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior="padding"
+          enabled
+        >
+          <Text style={styles.title}>Wallet</Text>
           <Text style={styles.errorText}>
             {this.props.error || this.state.error}
           </Text>
@@ -127,6 +133,7 @@ export class RegisterForm extends Component {
               onChangeText={this.handleNameChange}
               value={this.state.name}
               maxLength={16}
+              placeholderTextColor="#FFFFFF"
             />
           </View>
           <View style={styles.horizontalWrapper}>
@@ -139,6 +146,7 @@ export class RegisterForm extends Component {
               autoComplete="email"
               keyboardType="email-address"
               textContentType="emailAddress"
+              placeholderTextColor="#FFFFFF"
             />
           </View>
           <View style={styles.horizontalWrapper}>
@@ -149,6 +157,7 @@ export class RegisterForm extends Component {
               value={this.state.password}
               secureTextEntry={true}
               maxLength={16}
+              placeholderTextColor="#FFFFFF"
             />
           </View>
           <View style={styles.horizontalWrapper}>
@@ -159,6 +168,7 @@ export class RegisterForm extends Component {
               value={this.state.passwordConfirmation}
               secureTextEntry={true}
               maxLength={16}
+              placeholderTextColor="#FFFFFF"
             />
           </View>
 
@@ -167,18 +177,17 @@ export class RegisterForm extends Component {
               style={styles.button}
               onPress={this.handleRegisterBtn}
             >
-              <Text style={styles.buttonText}>CADASTRAR</Text>
+              <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
           </View>
+
           <View style={styles.horizontalWrapper}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={this.handleBackButton}
-            >
-              <Text style={styles.buttonText}>VOLTAR</Text>
+            <Text style={styles.text}>Have an account? </Text>
+            <TouchableOpacity onPress={this.handleBackButton}>
+              <Text style={styles.clickText}>Sign In</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
   }
@@ -187,14 +196,13 @@ export class RegisterForm extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: primaryColor,
     justifyContent: "flex-start",
     alignItems: "center"
   },
   button: {
-    height: 50,
+    height: 60,
     flex: 0.8,
-    backgroundColor: darkBlue,
+    backgroundColor: secondaryColor,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 3,
@@ -208,21 +216,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
-    padding: 10
+    marginBottom: 20
   },
   textInput: {
-    height: 50,
+    height: 60,
     flex: 0.8,
-    backgroundColor: lighColor,
+    backgroundColor: darkColor,
     borderRadius: 3,
-    borderColor: "#D4D4D4",
-    elevation: 3
+    borderColor: borderColor,
+    borderWidth: 1,
+    padding: 15,
+    color: "#FFF"
   },
   errorText: {
     color: errorColor
   },
-  activityIndicator: {
-    padding: 150
+  activivityIndicator: {
+    paddingTop: 150
+  },
+  text: {
+    color: "#FFF"
+  },
+  clickText: {
+    color: secondaryColor
+  },
+  title: {
+    color: "#FFF",
+    fontSize: 65,
+    marginTop: 50,
+    marginBottom: 25,
+    fontFamily: "Caveat-Bold"
   }
 });
 

@@ -5,12 +5,18 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from "react-native";
 
 import { connect } from "react-redux";
 
-import { darkBlue, lighColor, errorColor } from "../styles/common";
+import {
+  borderColor,
+  errorColor,
+  darkColor,
+  secondaryColor
+} from "../styles/common";
 import { login, registerFormToggle } from "../store/actions/userActions";
 
 function validateEmail(email) {
@@ -76,7 +82,12 @@ export class LoginForm extends Component {
       );
     } else {
       return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior="padding"
+          enabled
+        >
+          <Text style={styles.title}>Wallet</Text>
           <Text style={styles.errorText}>
             {this.props.error || this.state.error}
           </Text>
@@ -90,6 +101,7 @@ export class LoginForm extends Component {
               autoComplete="email"
               keyboardType="email-address"
               textContentType="emailAddress"
+              placeholderTextColor="#FFFFFF"
             />
           </View>
           <View style={styles.horizontalWrapper}>
@@ -99,6 +111,7 @@ export class LoginForm extends Component {
               onChangeText={this.handlePasswordChange}
               value={this.state.password}
               secureTextEntry={true}
+              placeholderTextColor="#FFFFFF"
             />
           </View>
 
@@ -107,18 +120,17 @@ export class LoginForm extends Component {
               style={styles.button}
               onPress={this.handleLoginBtn}
             >
-              <Text style={styles.buttonText}>LOGAR</Text>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
           </View>
+
           <View style={styles.horizontalWrapper}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={this.handleRegisterButton}
-            >
-              <Text style={styles.buttonText}>CADASTRAR</Text>
+            <Text style={styles.text}>Don't have an account? </Text>
+            <TouchableOpacity onPress={this.handleRegisterButton}>
+              <Text style={styles.clickText}>Create one now</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
   }
@@ -131,9 +143,9 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   button: {
-    height: 50,
+    height: 60,
     flex: 0.8,
-    backgroundColor: darkBlue,
+    backgroundColor: secondaryColor,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 3,
@@ -147,21 +159,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
-    padding: 10
+    marginBottom: 30
   },
   textInput: {
-    height: 50,
+    height: 60,
     flex: 0.8,
-    backgroundColor: lighColor,
+    backgroundColor: darkColor,
     borderRadius: 3,
-    borderColor: "#D4D4D4",
-    elevation: 3
+    borderColor: borderColor,
+    borderWidth: 1,
+    padding: 15,
+    color: "#FFF"
   },
   errorText: {
     color: errorColor
   },
   activivityIndicator: {
     paddingTop: 150
+  },
+  text: {
+    color: "#FFF"
+  },
+  clickText: {
+    color: secondaryColor
+  },
+  title: {
+    color: "#FFF",
+    fontSize: 65,
+    marginTop: 100,
+    marginBottom: 50,
+    fontFamily: "Caveat-Bold"
   }
 });
 

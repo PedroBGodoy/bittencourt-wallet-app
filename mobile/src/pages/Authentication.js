@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, StyleSheet, StatusBar, View } from "react-native";
+import { StyleSheet, StatusBar, View } from "react-native";
 
 import { statusColor, primaryColor } from "../styles/common";
 
@@ -19,9 +19,6 @@ export class Authentication extends Component {
     return (
       <View style={styles.container} behavior="padding">
         <StatusBar backgroundColor={statusColor} />
-
-        <Text style={styles.title}>WalletAPP</Text>
-
         {this.props.registering ? (
           <RegisterForm navigation={this.props.navigation} />
         ) : (
@@ -38,11 +35,6 @@ const styles = StyleSheet.create({
     backgroundColor: primaryColor,
     justifyContent: "flex-start",
     alignItems: "center"
-  },
-  title: {
-    color: "#FFF",
-    fontSize: 45,
-    margin: 50
   }
 });
 
