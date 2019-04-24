@@ -6,8 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   BackHandler,
-  ActivityIndicator,
-  KeyboardAvoidingView
+  ActivityIndicator
 } from "react-native";
 
 import { connect } from "react-redux";
@@ -117,11 +116,7 @@ export class RegisterForm extends Component {
       );
     } else {
       return (
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior="padding"
-          enabled
-        >
+        <View style={styles.container}>
           <Text style={styles.title}>Wallet</Text>
           <Text style={styles.errorText}>
             {this.props.error || this.state.error}
@@ -187,7 +182,7 @@ export class RegisterForm extends Component {
               <Text style={styles.clickText}>Sign In</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
+        </View>
       );
     }
   }
@@ -214,8 +209,6 @@ const styles = StyleSheet.create({
   },
   horizontalWrapper: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignContent: "center",
     marginBottom: 20
   },
   textInput: {
@@ -226,7 +219,7 @@ const styles = StyleSheet.create({
     borderColor: borderColor,
     borderWidth: 1,
     padding: 15,
-    color: "#FFF"
+    color: "#FFFFFF"
   },
   errorText: {
     color: errorColor

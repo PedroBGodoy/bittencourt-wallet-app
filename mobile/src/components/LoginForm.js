@@ -5,8 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
-  KeyboardAvoidingView
+  ActivityIndicator
 } from "react-native";
 
 import { connect } from "react-redux";
@@ -82,11 +81,7 @@ export class LoginForm extends Component {
       );
     } else {
       return (
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior="padding"
-          enabled
-        >
+        <View style={styles.container}>
           <Text style={styles.title}>Wallet</Text>
           <Text style={styles.errorText}>
             {this.props.error || this.state.error}
@@ -130,7 +125,7 @@ export class LoginForm extends Component {
               <Text style={styles.clickText}>Create one now</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
+        </View>
       );
     }
   }

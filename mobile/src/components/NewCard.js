@@ -9,7 +9,8 @@ import { fetchTransactions } from "../store/actions/transactionsActions";
 
 class NewCard extends Component {
   state = {
-    loading: false
+    loading: false,
+    month: "ABR"
   };
 
   async componentDidMount() {
@@ -26,7 +27,7 @@ class NewCard extends Component {
     return (
       <View style={styles.contentWrapper}>
         <View>
-          <Text style={styles.monthSelector}>MAR</Text>
+          <Text style={styles.monthSelector}>{this.state.month}</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardHead}>
