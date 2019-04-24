@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
-    marginBottom: 30
+    marginBottom: 20
   },
   textInput: {
     height: 60,
@@ -181,8 +181,8 @@ const styles = StyleSheet.create({
   title: {
     color: "#FFF",
     fontSize: 65,
-    marginTop: 100,
-    marginBottom: 50,
+    marginTop: 50,
+    marginBottom: 25,
     fontFamily: "Caveat-Bold"
   }
 });

@@ -24,11 +24,7 @@ export default class Main extends Component {
         <View style={styles.loadingContainer}>
           <StatusBar backgroundColor={statusColor} />
 
-          <ActivityIndicator
-            size="large"
-            color="#05a5d1"
-            animating={!this.state.hasInitialized}
-          />
+          <ActivityIndicator size="large" color="#05a5d1" />
         </View>
       );
     } else {

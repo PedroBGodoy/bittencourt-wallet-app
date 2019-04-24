@@ -36,8 +36,8 @@ export class Settings extends Component {
     this.props.navigation.navigate("Authentication");
   };
 
-  handleLogout = () => {
-    this.props.dispatch(logout());
+  handleLogout = async () => {
+    await this.props.dispatch(logout());
     this.props.dispatch(clearTransactions());
     this.goToLogin();
   };

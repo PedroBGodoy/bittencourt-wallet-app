@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: secondaryColor,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 8,
+    elevation: 3,
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3
   },

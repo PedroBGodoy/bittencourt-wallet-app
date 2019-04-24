@@ -3,7 +3,8 @@ import {
   USER_SUCCESS,
   USER_ERROR,
   USER_TOGGLE_REGISTER_FORM,
-  USER_LOG_OUT
+  USER_LOG_OUT,
+  USER_GET_LOGIN
 } from "../actions/userActions";
 
 const initialState = {
@@ -57,7 +58,17 @@ export default function authenticationReducer(state = initialState, action) {
         loged: false,
         name: "",
         email: "",
-        accessToken: "false",
+        accessToken: "",
+        loading: false
+      };
+    case USER_GET_LOGIN:
+      return {
+        ...state,
+        registering: false,
+        loged: action.payload.user.loged,
+        name: action.payload.user.name,
+        email: action.payload.user.email,
+        accessToken: action.payload.user.token,
         loading: false
       };
 
